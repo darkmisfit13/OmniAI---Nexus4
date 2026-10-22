@@ -68,19 +68,19 @@ export const DesktopFloatingWidget: React.FC<DesktopFloatingWidgetProps> = ({
       tier: 'WITTY',
       text: 'Code is clean. Staging deploy hits at 11:00 AM sharp—unless AWS evaporates.',
       tag: 'WITTY',
-      color: 'border-[#00f2fe]/40 text-[#00f2fe]',
+      color: 'border-red-600/40 text-red-400',
     },
     {
       tier: 'RAW & HONEST',
       text: 'Caught an auth regression before the client demo. Patch verified, pushing in 15m.',
       tag: 'RAW HONEST',
-      color: 'border-[#7f00ff]/40 text-[#c084fc]',
+      color: 'border-zinc-700 text-zinc-300',
     },
     {
       tier: 'DIRECT ACTION',
       text: 'Regression checks passed locally. Committing build #402 to staging now.',
       tag: 'DIRECT ACTION',
-      color: 'border-[#0575e6]/40 text-[#38bdf8]',
+      color: 'border-red-800/40 text-red-300',
     },
   ]);
 
@@ -169,19 +169,19 @@ export const DesktopFloatingWidget: React.FC<DesktopFloatingWidgetProps> = ({
               tier: 'WITTY',
               text: data.analysis.suggestedReplies[0] || 'Clean calculation. Ready to commit.',
               tag: 'WITTY',
-              color: 'border-[#00f2fe]/40 text-[#00f2fe]',
+              color: 'border-red-600/40 text-red-400',
             },
             {
               tier: 'RAW & HONEST',
               text: data.analysis.suggestedReplies[1] || 'Unvarnished truth: patch is locking in now.',
               tag: 'RAW HONEST',
-              color: 'border-[#7f00ff]/40 text-[#c084fc]',
+              color: 'border-zinc-700 text-zinc-300',
             },
             {
               tier: 'DIRECT ACTION',
               text: data.analysis.suggestedReplies[2] || 'Verified locally, deploying to staging right now.',
               tag: 'DIRECT ACTION',
-              color: 'border-[#0575e6]/40 text-[#38bdf8]',
+              color: 'border-red-800/40 text-red-300',
             },
           ]);
         }
@@ -246,7 +246,7 @@ export const DesktopFloatingWidget: React.FC<DesktopFloatingWidgetProps> = ({
         <div 
           onClick={onToggle}
           onMouseDown={handleMouseDown}
-          className="flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-[#0B0B0C]/95 backdrop-blur-xl border border-[#00f2fe]/40 shadow-[0_0_20px_rgba(0,242,254,0.3),0_10px_30px_rgba(0,0,0,0.8)] hover:border-[#00f2fe] hover:scale-105 active:scale-95 transition-all"
+          className="flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-[#0a0a0c]/95 backdrop-blur-xl border border-zinc-800 shadow-[0_0_20px_rgba(220,38,38,0.2),0_10px_30px_rgba(0,0,0,0.8)] hover:border-red-500/60 hover:scale-105 active:scale-95 transition-all"
           title="Click to open Omni Key Desktop Companion (⌘+Shift+K)"
         >
           <HoloOrb phase={isCapturingLaptop ? 'observing' : 'idle'} size="sm" />
@@ -254,17 +254,17 @@ export const DesktopFloatingWidget: React.FC<DesktopFloatingWidgetProps> = ({
           <div className="flex flex-col text-left">
             <div className="flex items-center gap-1.5 leading-none">
               <span className="text-xs font-bold font-mono tracking-wider text-white">
-                OMNI <span className="text-[#00f2fe]">AI</span>
+                OMNI <span className="text-red-500">AI</span>
               </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00f2fe] animate-ping" />
+              <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-ping" />
             </div>
-            <span className="text-[8px] font-mono tracking-wider text-slate-400 mt-0.5">
+            <span className="text-[8px] font-mono tracking-wider text-zinc-400 mt-0.5">
               Dark Misfit Studios
             </span>
           </div>
 
-          <div className="hidden sm:flex items-center gap-1 pl-1 border-l border-white/10 text-[9px] font-mono text-slate-400">
-            <span className="px-1.5 py-0.5 rounded bg-black/60 border border-white/10 text-[#00f2fe]">⌘⇧K</span>
+          <div className="hidden sm:flex items-center gap-1 pl-1 border-l border-zinc-800 text-[9px] font-mono text-zinc-400">
+            <span className="px-1.5 py-0.5 rounded bg-black border border-zinc-800 text-red-400">⌘⇧K</span>
           </div>
         </div>
       </div>
@@ -276,44 +276,44 @@ export const DesktopFloatingWidget: React.FC<DesktopFloatingWidgetProps> = ({
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-8 sm:pt-14 px-3 pointer-events-none">
       {/* Backdrop for closing or dismiss */}
       <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm pointer-events-auto"
+        className="absolute inset-0 bg-black/75 backdrop-blur-sm pointer-events-auto"
         onClick={onToggle}
       />
 
       {/* Floating System-Wide Dock */}
       <div 
-        className="relative w-full max-w-xl bg-[#0B0B0C]/95 backdrop-blur-2xl border border-[#00f2fe]/50 rounded-3xl shadow-[0_0_50px_rgba(0,242,254,0.3),0_20px_60px_rgba(0,0,0,0.95)] overflow-hidden pointer-events-auto flex flex-col z-10 animate-in fade-in zoom-in-95 duration-200"
+        className="relative w-full max-w-xl bg-[#0a0a0c]/95 backdrop-blur-2xl border border-zinc-800 rounded-3xl shadow-[0_0_50px_rgba(220,38,38,0.2),0_20px_60px_rgba(0,0,0,0.95)] overflow-hidden pointer-events-auto flex flex-col z-10 animate-in fade-in zoom-in-95 duration-200"
       >
-        {/* Neon Halo Stencil border accent */}
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#00f2fe] via-[#7f00ff] to-[#0575e6]" />
+        {/* Deep Crimson Halo line */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-red-600 via-red-500 to-zinc-800" />
 
         {/* 1. DOCK HEADER WITH EXPLICIT BRANDING */}
-        <div className="px-4 py-3 bg-[#000000]/80 border-b border-white/10 flex items-center justify-between">
+        <div className="px-4 py-3 bg-[#121318] border-b border-zinc-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <HoloOrb phase={desktopOrbPhase} size="sm" onClick={() => triggerLaptopAnalysis()} />
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-sm font-bold font-mono tracking-wider text-white">
-                  OMNI <span className="text-[#00f2fe]">AI</span>
+                  OMNI <span className="text-red-500">AI</span>
                 </h2>
-                <span className="px-1.5 py-0.2 rounded-full text-[9px] font-mono bg-[#00f2fe]/10 text-[#00f2fe] border border-[#00f2fe]/40">
+                <span className="px-1.5 py-0.2 rounded-full text-[9px] font-mono bg-red-950/60 text-red-400 border border-red-800/40">
                   SHADOW COMPANION
                 </span>
               </div>
-              <p className="text-[9.5px] font-mono tracking-widest text-slate-400 uppercase font-semibold">
+              <p className="text-[9.5px] font-mono tracking-widest text-zinc-400 uppercase font-semibold">
                 Dark Misfit Studios
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="hidden sm:inline-block text-[10px] font-mono text-slate-400">
-              Press <strong className="text-[#00f2fe]">⌘⇧K</strong> or <strong className="text-[#00f2fe]">Ctrl⇧K</strong> to hide
+            <span className="hidden sm:inline-block text-[10px] font-mono text-zinc-400">
+              Press <strong className="text-red-400">⌘⇧K</strong> or <strong className="text-red-400">Ctrl⇧K</strong> to hide
             </span>
 
             <button
               onClick={onToggle}
-              className="p-1.5 rounded-xl bg-black/60 border border-white/10 hover:border-[#00f2fe]/60 text-slate-400 hover:text-white transition"
+              className="p-1.5 rounded-xl bg-black border border-zinc-800 hover:border-red-500/60 text-zinc-400 hover:text-white transition"
               title="Close floating overlay"
             >
               <X className="w-4 h-4" />
@@ -322,14 +322,14 @@ export const DesktopFloatingWidget: React.FC<DesktopFloatingWidgetProps> = ({
         </div>
 
         {/* 2. LIVE DESKTOP SCREEN VISION & SYNC STRIP */}
-        <div className="px-4 py-2.5 bg-[#08080A] border-b border-white/10 flex items-center justify-between flex-wrap gap-2 text-xs font-mono">
+        <div className="px-4 py-2.5 bg-[#0a0a0c] border-b border-zinc-800 flex items-center justify-between flex-wrap gap-2 text-xs font-mono">
           <div className="flex items-center gap-2">
             <button
               onClick={handleToggleLaptopScreenVision}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold transition text-[11px] ${
                 isCapturingLaptop
-                  ? 'bg-red-500/20 text-red-400 border border-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.2)]'
-                  : 'bg-[#00f2fe]/10 text-[#00f2fe] border border-[#00f2fe]/40 hover:bg-[#00f2fe]/20 shadow-[0_0_15px_rgba(0,242,254,0.15)]'
+                  ? 'bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.4)]'
+                  : 'bg-red-950/40 text-red-300 border border-red-600/40 hover:bg-red-950/60 shadow-[0_0_15px_rgba(220,38,38,0.15)]'
               }`}
             >
               <Monitor className="w-3.5 h-3.5" />
@@ -340,7 +340,7 @@ export const DesktopFloatingWidget: React.FC<DesktopFloatingWidgetProps> = ({
               <button
                 onClick={() => triggerLaptopAnalysis()}
                 disabled={isAnalyzing}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#7f00ff]/20 text-[#c084fc] border border-[#7f00ff]/40 hover:bg-[#7f00ff]/30 transition text-[11px]"
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-zinc-900 text-zinc-300 border border-zinc-800 hover:bg-zinc-800 transition text-[11px]"
               >
                 <RefreshCw className={`w-3 h-3 ${isAnalyzing ? 'animate-spin' : ''}`} />
                 <span>Re-Scan Viewport</span>
@@ -355,8 +355,8 @@ export const DesktopFloatingWidget: React.FC<DesktopFloatingWidgetProps> = ({
                 onClick={onToggleAutoMode}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-mono font-bold transition ${
                   isAutoMode
-                    ? 'bg-[#00f2fe]/20 text-[#00f2fe] border border-[#00f2fe] shadow-[0_0_12px_rgba(0,242,254,0.3)] animate-pulse'
-                    : 'bg-black text-slate-500 border border-white/10 hover:text-slate-300'
+                    ? 'bg-red-950/60 text-red-300 border border-red-500 shadow-[0_0_12px_rgba(220,38,38,0.3)] animate-pulse'
+                    : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:text-zinc-200'
                 }`}
                 title="Toggle Autonomous Auto-Pilot Mode"
               >
@@ -366,8 +366,8 @@ export const DesktopFloatingWidget: React.FC<DesktopFloatingWidgetProps> = ({
             )}
 
             {/* Sync indicator with Phone */}
-            <div className="flex items-center gap-1.5 text-[10px] text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <div className="flex items-center gap-1.5 text-[10px] text-zinc-400">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
               <span>Paired with Phone (Omni Key Mobile)</span>
             </div>
           </div>
@@ -376,35 +376,35 @@ export const DesktopFloatingWidget: React.FC<DesktopFloatingWidgetProps> = ({
         {/* 3. SLIDING PREDICTIVE SUGGESTION CAROUSEL */}
         <div className="p-4 space-y-3">
           <div className="flex items-center justify-between text-xs font-mono">
-            <span className="text-[10px] text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#00f2fe]" />
+            <span className="text-[10px] text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-red-400" />
               <span>Nocturnal Cool Instant Completions</span>
             </span>
-            <span className="text-[9px] text-slate-500">Tap to copy or insert</span>
+            <span className="text-[9px] text-zinc-500">Tap to copy or insert</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             {laptopSuggestions.map((item, idx) => (
               <div
                 key={idx}
-                className="p-3 rounded-2xl bg-black/90 border border-white/10 hover:border-[#00f2fe]/60 transition flex flex-col justify-between group shadow-lg"
+                className="p-3 rounded-2xl bg-[#121318] border border-zinc-800 hover:border-red-500/60 transition flex flex-col justify-between group shadow-lg"
               >
                 <div>
-                  <span className={`inline-block px-1.5 py-0.5 rounded text-[8px] font-mono font-bold tracking-wider mb-2 border ${item.color} bg-black/40`}>
+                  <span className={`inline-block px-1.5 py-0.5 rounded text-[8px] font-mono font-bold tracking-wider mb-2 border ${item.color} bg-black`}>
                     {item.tag}
                   </span>
-                  <p className="text-xs text-slate-200 font-mono leading-relaxed group-hover:text-white mb-2">
+                  <p className="text-xs text-zinc-200 font-mono leading-relaxed group-hover:text-white mb-2">
                     "{item.text}"
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                <div className="flex items-center justify-between pt-2 border-t border-zinc-800">
                   <button
                     onClick={() => {
                       handleCopy(item.text);
                       onSendToPhone(item.text);
                     }}
-                    className="flex items-center gap-1 text-[10px] font-mono text-[#00f2fe] hover:underline"
+                    className="flex items-center gap-1 text-[10px] font-mono text-red-400 hover:underline"
                     title="Copy to laptop clipboard and push to phone"
                   >
                     <Copy className="w-3 h-3" />
@@ -416,7 +416,7 @@ export const DesktopFloatingWidget: React.FC<DesktopFloatingWidgetProps> = ({
                       onSelectSuggestion(item.text);
                       setInputText(item.text);
                     }}
-                    className="text-[10px] font-mono text-slate-400 hover:text-white"
+                    className="text-[10px] font-mono text-zinc-400 hover:text-white"
                   >
                     Select →
                   </button>
@@ -427,13 +427,13 @@ export const DesktopFloatingWidget: React.FC<DesktopFloatingWidgetProps> = ({
 
           {/* 4. ACTIVE DESKTOP INPUT & REWRITE DOCK */}
           <div className="pt-2">
-            <div className="flex items-center gap-2 p-2 rounded-2xl bg-black border border-white/15 focus-within:border-[#00f2fe] transition shadow-inner">
+            <div className="flex items-center gap-2 p-2 rounded-2xl bg-black border border-zinc-800 focus-within:border-red-500 transition shadow-inner">
               <input
                 type="text"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="Type or paste conversation from laptop..."
-                className="flex-1 bg-transparent text-xs text-white placeholder-slate-500 font-mono focus:outline-none px-2"
+                className="flex-1 bg-transparent text-xs text-white placeholder-zinc-500 font-mono focus:outline-none px-2"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && inputText) {
                     onSendToPhone(inputText);
@@ -448,7 +448,7 @@ export const DesktopFloatingWidget: React.FC<DesktopFloatingWidgetProps> = ({
                     handleCopy(inputText);
                     onSendToPhone(inputText);
                   }}
-                  className="px-3 py-1.5 rounded-xl bg-[#00f2fe]/10 border border-[#00f2fe]/40 text-[#00f2fe] text-xs font-mono font-bold hover:bg-[#00f2fe]/20 transition flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-mono font-bold transition flex items-center gap-1.5 shadow-md shadow-red-600/30"
                   title="Copy to laptop clipboard and push to phone keyboard"
                 >
                   {copied ? <Check className="w-3 h-3" /> : <Share2 className="w-3 h-3" />}
@@ -459,13 +459,13 @@ export const DesktopFloatingWidget: React.FC<DesktopFloatingWidgetProps> = ({
 
             {/* Quick sync info pill */}
             {phoneDraftText && phoneDraftText !== inputText && (
-              <div className="mt-2 flex items-center justify-between px-3 py-1.5 rounded-xl bg-[#0575e6]/10 border border-[#0575e6]/30 text-[10px] font-mono text-slate-300">
+              <div className="mt-2 flex items-center justify-between px-3 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-300">
                 <span className="truncate pr-2">
-                  <strong className="text-[#00f2fe]">Current Phone Draft:</strong> "{phoneDraftText}"
+                  <strong className="text-red-400">Current Phone Draft:</strong> "{phoneDraftText}"
                 </span>
                 <button
                   onClick={() => setInputText(phoneDraftText)}
-                  className="text-[#00f2fe] hover:underline shrink-0"
+                  className="text-red-400 hover:underline shrink-0"
                 >
                   Load to Laptop
                 </button>
@@ -475,9 +475,9 @@ export const DesktopFloatingWidget: React.FC<DesktopFloatingWidgetProps> = ({
         </div>
 
         {/* 5. FOOTER LINK & INTEGRATION NOTICE */}
-        <div className="px-4 py-2 bg-black/90 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-slate-400">
+        <div className="px-4 py-2 bg-black border-t border-zinc-800 flex items-center justify-between text-[10px] font-mono text-zinc-400">
           <span>Dark Misfit Studios • Nocturnal Cool Core</span>
-          <span className="text-[#00f2fe]">Global Hotkey Active (⌘⇧K)</span>
+          <span className="text-red-400">Global Hotkey Active (⌘⇧K)</span>
         </div>
       </div>
     </div>

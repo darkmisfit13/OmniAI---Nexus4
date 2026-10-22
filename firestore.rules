@@ -44,6 +44,13 @@ service cloud.firestore {
       match /council/{sessionId} {
         allow read, write: if isOwner(userId) || isAdmin();
       }
+
+      match /chatThreads/{threadId} {
+        allow read, write: if isOwner(userId) || isAdmin();
+        match /messages/{messageId} {
+          allow read, write: if isOwner(userId) || isAdmin();
+        }
+      }
     }
 
     // Admin collection

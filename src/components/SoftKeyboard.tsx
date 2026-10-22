@@ -142,7 +142,7 @@ export const SoftKeyboard: React.FC<SoftKeyboardProps> = ({
         {onToggleCollapse && (
           <button
             onClick={onToggleCollapse}
-            className="text-[#00f2fe] hover:text-[#38bdf8] font-mono font-semibold text-xs flex items-center gap-1"
+            className="text-red-500 hover:text-red-400 font-mono font-semibold text-xs flex items-center gap-1"
           >
             <span>Restore Keyboard</span>
             <span>↑</span>
@@ -164,13 +164,13 @@ export const SoftKeyboard: React.FC<SoftKeyboardProps> = ({
             className="flex items-center gap-1 hover:text-slate-300 transition"
             title="Toggle Mechanical Key Switch Audio"
           >
-            {soundEnabled ? <Volume2 className="w-3 h-3 text-[#00f2fe]" /> : <VolumeX className="w-3 h-3" />}
+            {soundEnabled ? <Volume2 className="w-3 h-3 text-red-500" /> : <VolumeX className="w-3 h-3" />}
             <span>{soundEnabled ? 'Switch: Linear' : 'Muted'}</span>
           </button>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-[#00f2fe]/80 font-mono text-[9px] tracking-wider">
+          <span className="text-red-400 font-mono text-[9px] tracking-wider">
             KINETIC 3D CAPS
           </span>
           {onToggleCollapse && (
@@ -187,7 +187,7 @@ export const SoftKeyboard: React.FC<SoftKeyboardProps> = ({
 
       {/* Emoji Drawer */}
       {showEmojiPicker && (
-        <div className="grid grid-cols-8 gap-1.5 p-2 bg-[#0B0B0C] rounded-xl mb-1.5 border border-[#00f2fe]/30 shadow-[0_0_15px_rgba(0,242,254,0.15)] animate-in fade-in duration-100">
+        <div className="grid grid-cols-8 gap-1.5 p-2 bg-[#121318] rounded-xl mb-1.5 border border-zinc-800 shadow-[0_0_15px_rgba(0,0,0,0.8)] animate-in fade-in duration-100">
           {emojis.map((emoji, idx) => (
             <button
               key={idx}
@@ -196,7 +196,7 @@ export const SoftKeyboard: React.FC<SoftKeyboardProps> = ({
                 playClick('standard');
                 onKeyPress(emoji);
               }}
-              className="text-lg p-1.5 rounded-lg hover:bg-white/10 active:scale-125 transition-transform"
+              className="text-lg p-1.5 rounded-lg hover:bg-zinc-800 active:scale-125 transition-transform"
             >
               {emoji}
             </button>
@@ -251,8 +251,8 @@ export const SoftKeyboard: React.FC<SoftKeyboardProps> = ({
             }}
             className={`w-11 h-11 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition-all ${
               isShift
-                ? 'keycap-primary-3d text-[#00f2fe]'
-                : 'keycap-3d text-slate-300'
+                ? 'keycap-primary-3d text-white border-red-500'
+                : 'keycap-3d text-zinc-300'
             }`}
           >
             <ArrowUp className="w-4 h-4" />
@@ -264,7 +264,7 @@ export const SoftKeyboard: React.FC<SoftKeyboardProps> = ({
               playClick('standard');
               setLayoutMode(layoutMode === 'numbers' ? 'symbols' : 'numbers');
             }}
-            className="w-11 h-11 rounded-lg keycap-3d text-slate-200 text-xs font-mono font-bold flex items-center justify-center"
+            className="w-11 h-11 rounded-lg keycap-3d text-zinc-200 text-xs font-mono font-bold flex items-center justify-center"
           >
             {layoutMode === 'numbers' ? '#+=' : '123'}
           </button>
@@ -287,7 +287,7 @@ export const SoftKeyboard: React.FC<SoftKeyboardProps> = ({
 
         <button
           onClick={handleBackspaceClick}
-          className={`w-11 h-11 rounded-lg keycap-3d text-slate-300 text-xs font-mono flex items-center justify-center ${
+          className={`w-11 h-11 rounded-lg keycap-3d text-zinc-300 text-xs font-mono flex items-center justify-center ${
             activeKey === 'backspace' ? 'depressed' : ''
           }`}
         >
@@ -303,7 +303,7 @@ export const SoftKeyboard: React.FC<SoftKeyboardProps> = ({
             playClick('standard');
             setLayoutMode(layoutMode === 'alpha' ? 'numbers' : 'alpha');
           }}
-          className="w-12 h-11 rounded-lg keycap-3d text-slate-300 text-xs font-mono font-bold flex items-center justify-center"
+          className="w-12 h-11 rounded-lg keycap-3d text-zinc-300 text-xs font-mono font-bold flex items-center justify-center"
         >
           {layoutMode === 'alpha' ? '?123' : 'ABC'}
         </button>
@@ -316,38 +316,38 @@ export const SoftKeyboard: React.FC<SoftKeyboardProps> = ({
           }}
           className={`w-10 h-11 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition-all ${
             showEmojiPicker
-              ? 'keycap-primary-3d text-[#00f2fe]'
-              : 'keycap-3d text-slate-300'
+              ? 'keycap-primary-3d text-white'
+              : 'keycap-3d text-zinc-300'
           }`}
         >
           <Smile className="w-4 h-4" />
         </button>
 
-        {/* Volumetric Spacebar named 'THE VOID' in cool graphic letters */}
+        {/* Volumetric Spacebar named 'THE VOID' with Deep Crimson glow */}
         <button
           onClick={handleSpaceClick}
-          className={`flex-1 h-11 rounded-lg keycap-3d text-slate-300 text-xs font-mono flex items-center justify-center relative overflow-hidden group border border-[#00f2fe]/20 hover:border-[#00f2fe]/50 ${
-            activeKey === 'space' ? 'depressed ring-1 ring-[#00f2fe]/60' : ''
+          className={`flex-1 h-11 rounded-lg keycap-3d text-zinc-300 text-xs font-mono flex items-center justify-center relative overflow-hidden group border border-zinc-800 hover:border-red-600/50 ${
+            activeKey === 'space' ? 'depressed ring-1 ring-red-600/60' : ''
           }`}
           title="The Void"
         >
-          {/* Subtle cosmic void backdrop */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-[#0B0B0C] to-black/90" />
+          {/* Pure dark void backdrop */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-[#0a0a0c] to-black" />
           
           <div className="relative z-10 flex items-center justify-center gap-2">
-            <span className="text-[11px] font-black tracking-[0.38em] uppercase font-mono bg-clip-text text-transparent bg-gradient-to-r from-[#00f2fe] via-slate-100 to-[#7f00ff] drop-shadow-[0_0_8px_rgba(0,242,254,0.65)] group-hover:drop-shadow-[0_0_12px_rgba(0,242,254,0.9)] transition-all">
+            <span className="text-[11px] font-black tracking-[0.38em] uppercase font-mono bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-zinc-100 to-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.7)] group-hover:drop-shadow-[0_0_12px_rgba(220,38,38,0.9)] transition-all">
               THE VOID
             </span>
           </div>
 
-          {/* Holographic glowing line underneath */}
-          <div className="absolute inset-x-8 bottom-1.5 h-[2px] bg-gradient-to-r from-transparent via-[#00f2fe]/70 to-transparent shadow-[0_0_8px_rgba(0,242,254,0.7)]" />
+          {/* Deep Crimson line underneath */}
+          <div className="absolute inset-x-8 bottom-1.5 h-[2px] bg-gradient-to-r from-transparent via-red-600/70 to-transparent shadow-[0_0_8px_rgba(220,38,38,0.7)]" />
         </button>
 
-        {/* Enter key with Plasma Violet & Electric Cyan depth */}
+        {/* Enter key with High-Impact Deep Crimson gradient */}
         <button
           onClick={handleEnterClick}
-          className={`w-14 h-11 rounded-lg keycap-primary-3d text-[#00f2fe] font-mono font-bold text-xs flex items-center justify-center ${
+          className={`w-14 h-11 rounded-lg keycap-primary-3d text-white font-mono font-bold text-xs flex items-center justify-center ${
             activeKey === 'enter' ? 'depressed' : ''
           }`}
         >

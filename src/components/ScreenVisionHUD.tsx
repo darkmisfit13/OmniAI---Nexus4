@@ -56,9 +56,9 @@ export const ScreenVisionHUD: React.FC<ScreenVisionHUDProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full space-y-3.5 p-3.5 overflow-y-auto bg-[#000000]">
+    <div className="flex flex-col h-full space-y-3.5 p-3.5 overflow-y-auto bg-black font-mono">
       {/* 1. VISION ENGINE HEADER */}
-      <div className="flex items-center justify-between p-3 rounded-2xl bg-[#0B0B0C] border border-white/10 shadow-[0_0_25px_rgba(0,0,0,0.8)]">
+      <div className="flex items-center justify-between p-3 rounded-2xl bg-[#121318] border border-zinc-800 shadow-[0_0_25px_rgba(0,0,0,0.8)]">
         <div className="flex items-center gap-2.5">
           <HoloOrb phase={isStreaming ? 'observing' : isAnalyzing ? 'analyzing' : 'idle'} size="sm" />
           <div>
@@ -66,14 +66,14 @@ export const ScreenVisionHUD: React.FC<ScreenVisionHUDProps> = ({
               <h2 className="text-xs font-bold font-mono tracking-wider text-white">SYSTEM-WIDE COGNITION</h2>
               <span className={`px-1.5 py-0.2 rounded-full text-[9px] font-mono font-bold flex items-center gap-1 ${
                 isStreaming
-                  ? 'bg-[#00f2fe]/20 text-[#00f2fe] border border-[#00f2fe]/60 animate-pulse'
-                  : 'bg-[#7f00ff]/20 text-[#c084fc] border border-[#7f00ff]/40'
+                  ? 'bg-red-950/60 text-red-400 border border-red-600/60 animate-pulse'
+                  : 'bg-zinc-800 text-zinc-300 border border-zinc-700'
               }`}>
                 {isStreaming ? '● VIEWPORT ACTIVE' : 'SIMULATED FEED'}
               </span>
             </div>
-            <p className="text-[10px] text-slate-400 font-mono">
-              Active Context: <strong className="text-slate-200">{activeScreenName}</strong>
+            <p className="text-[10px] text-zinc-400 font-mono">
+              Active Context: <strong className="text-zinc-200">{activeScreenName}</strong>
             </p>
           </div>
         </div>
@@ -83,7 +83,7 @@ export const ScreenVisionHUD: React.FC<ScreenVisionHUDProps> = ({
           {isStreaming ? (
             <button
               onClick={onStopStreaming}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-black border border-[#00f2fe]/40 text-[10px] font-mono text-[#00f2fe] hover:bg-black/80 transition"
+              className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-black border border-red-600/40 text-[10px] font-mono text-red-400 hover:bg-zinc-900 transition"
             >
               <VideoOff className="w-3 h-3" />
               <span>Stop</span>
@@ -91,7 +91,7 @@ export const ScreenVisionHUD: React.FC<ScreenVisionHUDProps> = ({
           ) : (
             <button
               onClick={onStartStreaming}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-gradient-to-r from-[#00f2fe] to-[#7f00ff] text-[10px] font-mono font-bold text-black shadow-[0_0_12px_rgba(0,242,254,0.3)] hover:brightness-110 transition active:scale-95"
+              className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-red-600 hover:bg-red-500 text-[10px] font-mono font-bold text-white shadow-[0_0_12px_rgba(220,38,38,0.3)] transition active:scale-95"
             >
               <Video className="w-3 h-3" />
               <span>Share Viewport</span>
@@ -101,17 +101,17 @@ export const ScreenVisionHUD: React.FC<ScreenVisionHUDProps> = ({
           <button
             onClick={onManualScan}
             disabled={isAnalyzing}
-            className="p-1.5 rounded-xl bg-black border border-white/10 text-slate-300 hover:text-white transition disabled:opacity-40"
+            className="p-1.5 rounded-xl bg-black border border-zinc-800 text-zinc-300 hover:text-white transition disabled:opacity-40"
             title="Scan Viewport Now"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isAnalyzing ? 'animate-spin text-[#00f2fe]' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${isAnalyzing ? 'animate-spin text-red-400' : ''}`} />
           </button>
         </div>
       </div>
 
       {/* 2. REAL SCREEN DISPLAY (if streaming) */}
       {isStreaming && (
-        <div className="relative rounded-2xl overflow-hidden border border-[#00f2fe]/40 shadow-2xl bg-black aspect-video flex items-center justify-center group">
+        <div className="relative rounded-2xl overflow-hidden border border-red-600/40 shadow-2xl bg-black aspect-video flex items-center justify-center group">
           <video
             ref={videoRef}
             autoPlay
@@ -119,8 +119,8 @@ export const ScreenVisionHUD: React.FC<ScreenVisionHUDProps> = ({
             muted
             className="w-full h-full object-contain"
           />
-          <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/80 border border-[#00f2fe]/50 backdrop-blur-md text-[10px] font-mono text-[#00f2fe]">
-            <Activity className="w-3.5 h-3.5 animate-pulse text-[#00f2fe]" />
+          <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/80 border border-red-600/50 backdrop-blur-md text-[10px] font-mono text-red-400">
+            <Activity className="w-3.5 h-3.5 animate-pulse text-red-400" />
             <span>Scanning Active Window Live</span>
           </div>
         </div>
@@ -128,25 +128,25 @@ export const ScreenVisionHUD: React.FC<ScreenVisionHUDProps> = ({
 
       {/* 3. DOSSIER & EMOTIONAL SUBTEXT */}
       <div className="grid grid-cols-2 gap-2">
-        <div className="p-2.5 rounded-xl bg-[#0B0B0C] border border-white/10">
-          <span className="text-[9px] font-mono text-[#00f2fe] block mb-0.5">COUNTERPART DOSSIER</span>
+        <div className="p-2.5 rounded-xl bg-[#121318] border border-zinc-800">
+          <span className="text-[9px] font-mono text-red-400 block mb-0.5">COUNTERPART DOSSIER</span>
           <p className="text-xs font-semibold text-white truncate">
             {analysisData?.counterpartDossier || 'Active Participant'}
           </p>
         </div>
 
-        <div className="p-2.5 rounded-xl bg-[#0B0B0C] border border-white/10">
-          <span className="text-[9px] font-mono text-[#7f00ff] block mb-0.5">PSYCHOLOGICAL REGISTER</span>
-          <p className="text-xs font-semibold text-[#c084fc] truncate">
+        <div className="p-2.5 rounded-xl bg-[#121318] border border-zinc-800">
+          <span className="text-[9px] font-mono text-zinc-400 block mb-0.5">PSYCHOLOGICAL REGISTER</span>
+          <p className="text-xs font-semibold text-zinc-200 truncate">
             {analysisData?.emotionalRegister || 'Raw & Unflinching'}
           </p>
         </div>
       </div>
 
       {/* 4. TACTICAL RULES */}
-      <div className="p-3.5 rounded-2xl bg-[#0B0B0C] border border-white/10 space-y-2">
-        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <ShieldCheck className="w-3.5 h-3.5 text-[#00f2fe]" />
+      <div className="p-3.5 rounded-2xl bg-[#121318] border border-zinc-800 space-y-2">
+        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
+          <ShieldCheck className="w-3.5 h-3.5 text-red-400" />
           DarkMisfit Tactical Directives
         </span>
 
@@ -158,9 +158,9 @@ export const ScreenVisionHUD: React.FC<ScreenVisionHUDProps> = ({
           ]).map((tip: string, idx: number) => (
             <div
               key={idx}
-              className="flex items-start gap-2 p-2 rounded-xl bg-black/60 border border-white/5 text-xs text-slate-200 font-mono text-[11px]"
+              className="flex items-start gap-2 p-2 rounded-xl bg-black border border-zinc-800/80 text-xs text-zinc-200 font-mono text-[11px]"
             >
-              <span className="w-4 h-4 rounded-full bg-[#00f2fe]/20 text-[#00f2fe] flex items-center justify-center font-bold text-[9px] shrink-0 mt-0.5">
+              <span className="w-4 h-4 rounded-full bg-red-950/40 text-red-400 border border-red-600/40 flex items-center justify-center font-bold text-[9px] shrink-0 mt-0.5">
                 {idx + 1}
               </span>
               <span>{tip}</span>
@@ -170,37 +170,37 @@ export const ScreenVisionHUD: React.FC<ScreenVisionHUDProps> = ({
       </div>
 
       {/* 5. PREDICTIVE RESPONSE TIERS */}
-      <div className="p-3.5 rounded-2xl bg-[#0B0B0C] border border-white/10 space-y-2">
+      <div className="p-3.5 rounded-2xl bg-[#121318] border border-zinc-800 space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#00f2fe] flex items-center gap-1.5">
-            <Send className="w-3.5 h-3.5 text-[#00f2fe]" />
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-red-400 flex items-center gap-1.5">
+            <Send className="w-3.5 h-3.5 text-red-400" />
             Predictive Response Tiers
           </span>
-          <span className="text-[9px] font-mono text-slate-500">Tap to load into keyboard</span>
+          <span className="text-[9px] font-mono text-zinc-500">Tap to load into keyboard</span>
         </div>
 
         <div className="space-y-2">
           {(analysisData?.suggestedReplies || []).map((reply: string, idx: number) => (
             <div
               key={idx}
-              className="flex items-center justify-between p-2.5 rounded-xl bg-black/80 border border-white/10 hover:border-[#00f2fe]/50 transition group"
+              className="flex items-center justify-between p-2.5 rounded-xl bg-black border border-zinc-800 hover:border-red-600/50 transition group"
             >
-              <p className="text-xs text-slate-200 pr-2 leading-relaxed flex-1 font-mono text-[11px]">
+              <p className="text-xs text-zinc-200 pr-2 leading-relaxed flex-1 font-mono text-[11px]">
                 {reply}
               </p>
 
               <div className="flex items-center gap-1.5 shrink-0">
                 <button
                   onClick={() => handleCopyReply(reply, idx)}
-                  className="p-1.5 rounded-lg bg-[#0B0B0C] border border-white/10 text-slate-400 hover:text-white transition"
+                  className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white transition"
                   title="Copy to clipboard"
                 >
-                  {copiedIdx === idx ? <Check className="w-3 h-3 text-[#00f2fe]" /> : <Copy className="w-3 h-3" />}
+                  {copiedIdx === idx ? <Check className="w-3 h-3 text-red-400" /> : <Copy className="w-3 h-3" />}
                 </button>
 
                 <button
                   onClick={() => onApplyReply(reply)}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#00f2fe]/20 border border-[#00f2fe]/50 text-[#00f2fe] text-xs font-mono font-bold transition active:scale-95"
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-950/40 border border-red-600/50 text-red-400 text-xs font-mono font-bold hover:bg-red-900/40 transition active:scale-95"
                   title="Insert into active keyboard"
                 >
                   <span>Use</span>

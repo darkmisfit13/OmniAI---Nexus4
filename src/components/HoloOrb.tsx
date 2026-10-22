@@ -92,14 +92,14 @@ void main() {
   float core = pow(facing, 6.8) * (0.45 + 0.15 * sin(uTime * uPulse));
   float tint = clamp(n * 2.3 + p.x * 0.5 + 0.5, 0.0, 1.0);
 
-  // Official OmniAI Palette: Electric Cyan (#00f2fe), Plasma Violet (#7f00ff), Sapphire Blue (#0575e6)
-  vec3 energy = mix(uSapphireBlue, uPlasmaViolet, tint);
-  energy = mix(energy, uElectricCyan, smoothstep(0.18, 0.72, p.x + n) * 0.9);
+  // Clean Premium Dark-Mode Palette: Crimson Red (#dc2626), Deep Ruby (#7f1d1d), High-Contrast Zinc (#f4f4f5)
+  vec3 energy = mix(uPlasmaViolet, uElectricCyan, tint);
+  energy = mix(energy, uSapphireBlue, smoothstep(0.7, 0.95, p.x + n) * 0.4);
 
-  vec3 col = energy * (0.09 + ribbon * 1.9 + fine * 0.5 + rim * 0.9);
-  col += uElectricCyan * core * 1.4 + mix(uElectricCyan, uPlasmaViolet, 0.45) * pow(facing, 20.0) * 0.75;
+  vec3 col = energy * (0.12 + ribbon * 2.2 + fine * 0.6 + rim * 1.1);
+  col += uElectricCyan * core * 1.5 + mix(uElectricCyan, uPlasmaViolet, 0.45) * pow(facing, 18.0) * 0.75;
 
-  gl_FragColor = vec4(col, 0.82 + ribbon * 0.18);
+  gl_FragColor = vec4(col, 0.85 + ribbon * 0.15);
 }
 `;
 
@@ -179,10 +179,10 @@ export const HoloOrb: React.FC<HoloOrbProps> = ({
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       container.appendChild(renderer.domElement);
 
-      // Official OmniWave Colors
-      const uElectricCyan = new THREE.Color('#00f2fe');
-      const uPlasmaViolet = new THREE.Color('#7f00ff');
-      const uSapphireBlue = new THREE.Color('#0575e6');
+      // Clean Premium Dark-Mode Palette: Crimson Red, Deep Ruby, Titanium Zinc
+      const uElectricCyan = new THREE.Color('#dc2626');
+      const uPlasmaViolet = new THREE.Color('#7f1d1d');
+      const uSapphireBlue = new THREE.Color('#f4f4f5');
 
       const uniforms = {
         uTime: { value: 0 },
@@ -392,30 +392,30 @@ export const HoloOrb: React.FC<HoloOrbProps> = ({
       className={`relative inline-flex items-center justify-center select-none cursor-pointer ${resolvedSizeClass} ${className}`}
       title={`OmniAI Orb — ${getStatusLabel()}`}
     >
-      {/* Matte black foundation with Electric Cyan & Plasma Violet pulsing box-shadow halo */}
+      {/* Matte black foundation with Deep Crimson & Ruby pulsing box-shadow halo */}
       <div 
-        className="absolute inset-0 rounded-full bg-[#000000] shadow-[0_0_16px_rgba(0,242,254,0.35),0_0_24px_rgba(127,0,255,0.25),inset_0_0_10px_rgba(5,117,230,0.3)] transition-all duration-500 border border-[#00f2fe]/40"
+        className="absolute inset-0 rounded-full bg-[#000000] shadow-[0_0_16px_rgba(220,38,38,0.35),0_0_24px_rgba(127,29,29,0.3),inset_0_0_10px_rgba(220,38,38,0.25)] transition-all duration-500 border border-red-600/40"
       />
 
       {/* 3D WebGL Canvas */}
       {hasWebGL ? (
         <div ref={containerRef} className="w-full h-full relative z-10 rounded-full overflow-hidden" />
       ) : (
-        <div className="w-full h-full rounded-full bg-[#000000] border border-[#00f2fe]/60 flex items-center justify-center relative z-10">
-          <div className="w-2/3 h-2/3 rounded-full bg-gradient-to-tr from-[#0575e6] via-[#7f00ff] to-[#00f2fe] animate-pulse" />
+        <div className="w-full h-full rounded-full bg-[#000000] border border-red-600/60 flex items-center justify-center relative z-10">
+          <div className="w-2/3 h-2/3 rounded-full bg-gradient-to-tr from-red-700 via-red-600 to-red-500 animate-pulse" />
         </div>
       )}
 
       {/* Active Phase Ping Badge */}
       {(phase === 'analyzing' || phase === 'processing') && (
         <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5 z-20">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00f2fe] opacity-85" />
-          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00f2fe]" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-600 opacity-85" />
+          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600" />
         </span>
       )}
 
       {showStatusLabel && (
-        <span className="absolute -bottom-5 text-[10px] text-[#00f2fe] font-mono tracking-wider whitespace-nowrap drop-shadow-[0_0_6px_rgba(0,242,254,0.6)]">
+        <span className="absolute -bottom-5 text-[10px] text-red-400 font-mono tracking-wider whitespace-nowrap drop-shadow-[0_0_6px_rgba(220,38,38,0.6)]">
           {getStatusLabel()}
         </span>
       )}

@@ -14,7 +14,7 @@
   }
 }
 
-/* Global scrollbar eradication: dark, sleek, no white bars */
+/* Global scrollbar eradication: absolute dark, sleek, no light bars */
 ::-webkit-scrollbar {
   width: 4px;
   height: 4px;
@@ -23,19 +23,20 @@
   background: #000000;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e1e24;
+  background: #27272a;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #00f2fe;
+  background: #dc2626;
 }
 
 :root {
   --omni-black: #000000;
-  --omni-charcoal: #0B0B0C;
-  --omni-cyan: #00f2fe;
-  --omni-violet: #7f00ff;
-  --omni-sapphire: #0575e6;
+  --omni-charcoal: #0a0a0c;
+  --omni-card: #121318;
+  --omni-border: #27272a;
+  --omni-crimson: #dc2626;
+  --omni-red-glow: rgba(220, 38, 38, 0.4);
 }
 
 html, body, #root {
@@ -43,7 +44,7 @@ html, body, #root {
   margin: 0;
   padding: 0;
   background-color: #000000;
-  color: #f1f5f9;
+  color: #f4f4f5;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -53,117 +54,104 @@ html, body, #root {
   overflow-x: hidden;
 }
 
-/* Glassmorphism Hull: Translucent frosted glass layered over matte black */
+/* Glassmorphism Hull: Translucent dark containers over pure black */
 .glass-hull {
-  background: rgba(11, 11, 12, 0.78);
+  background: rgba(18, 19, 24, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .glass-card {
-  background: rgba(11, 11, 12, 0.88);
+  background: rgba(18, 19, 24, 0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(39, 39, 42, 0.9);
 }
 
-/* Pulsing Neon Halo Stencil */
-.neon-halo-cyan {
-  box-shadow: 0 0 15px rgba(0, 242, 254, 0.22), inset 0 0 15px rgba(0, 242, 254, 0.12);
-  border: 1px solid rgba(0, 242, 254, 0.45);
+/* Crimson Alert / Action Neon Halo */
+.neon-halo-crimson {
+  box-shadow: 0 0 16px rgba(220, 38, 38, 0.35), inset 0 0 12px rgba(220, 38, 38, 0.15);
+  border: 1px solid rgba(220, 38, 38, 0.5);
 }
 
-.neon-halo-violet {
-  box-shadow: 0 0 18px rgba(127, 0, 255, 0.28), inset 0 0 18px rgba(127, 0, 255, 0.14);
-  border: 1px solid rgba(127, 0, 255, 0.45);
-}
-
-.neon-halo-hybrid {
-  box-shadow: 0 0 20px rgba(0, 242, 254, 0.2), 0 0 35px rgba(127, 0, 255, 0.15), inset 0 0 12px rgba(5, 117, 230, 0.15);
-  border: 1px solid rgba(0, 242, 254, 0.35);
-}
-
-/* Volumetric 3D Keycap Stencil */
+/* Volumetric 3D Keycap Stencil: Obsidian & Crimson */
 .keycap-3d {
-  background: linear-gradient(180deg, #18181b 0%, #0B0B0C 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-bottom: 2px solid rgba(0, 242, 254, 0.3);
+  background: linear-gradient(180deg, #18181b 0%, #0a0a0c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 2px solid rgba(220, 38, 38, 0.35);
   box-shadow: 
     0 3px 0 0 #050506,
-    0 4px 6px -1px rgba(0, 0, 0, 0.7),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+    0 4px 6px -1px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
   transform: translateY(0);
   transition: all 0.07s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .keycap-3d:hover {
-  border-color: rgba(0, 242, 254, 0.5);
+  border-color: rgba(220, 38, 38, 0.55);
   box-shadow: 
     0 3px 0 0 #050506,
-    0 0 12px rgba(0, 242, 254, 0.35),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.25);
+    0 0 12px rgba(220, 38, 38, 0.35),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
 }
 
 .keycap-3d:active, .keycap-3d.depressed {
   transform: translateY(3px);
   box-shadow: 
     0 0 0 0 #050506,
-    0 0 16px rgba(127, 0, 255, 0.6),
-    inset 0 2px 4px rgba(0, 0, 0, 0.8);
-  border-color: rgba(127, 0, 255, 0.8);
-  background: #0d0d11;
+    0 0 16px rgba(220, 38, 38, 0.65),
+    inset 0 2px 4px rgba(0, 0, 0, 0.9);
+  border-color: rgba(220, 38, 38, 0.85);
+  background: #110505;
 }
 
-/* Functional Special Keys (Space, Enter, Backspace) */
+/* Primary Action / Special Keys */
 .keycap-action {
   background: linear-gradient(180deg, #27272a 0%, #18181b 100%);
-  border: 1px solid rgba(0, 242, 254, 0.25);
-  border-bottom: 2px solid #00f2fe;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  border-bottom: 2px solid #dc2626;
 }
 
 .keycap-action:hover {
-  border-color: #00f2fe;
-  box-shadow: 0 0 14px rgba(0, 242, 254, 0.45);
+  border-color: #dc2626;
+  box-shadow: 0 0 14px rgba(220, 38, 38, 0.5);
 }
 
-.keycap-accent {
-  background: linear-gradient(180deg, #3b0764 0%, #1e1b4b 100%);
-  border: 1px solid rgba(127, 0, 255, 0.5);
-  border-bottom: 2px solid #7f00ff;
+.keycap-primary-3d {
+  background: linear-gradient(180deg, #991b1b 0%, #7f1d1d 100%);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-bottom: 2px solid #ef4444;
+  box-shadow: 
+    0 3px 0 0 #450a0a,
+    0 0 12px rgba(220, 38, 38, 0.4);
 }
 
-.keycap-accent:hover {
-  border-color: #7f00ff;
-  box-shadow: 0 0 16px rgba(127, 0, 255, 0.5);
-}
-
-/* Omni Mobile Core Grid Layout - Eliminating Desktop Overlap */
+/* Omni Mobile Core Grid Layout */
 .omni-mobile-wrapper {
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
   max-width: 100%;
-  background-color: #030303; /* Deep Void Black */
-  color: #e5e5e5;
+  background-color: #000000; /* Pure Black */
+  color: #f4f4f5;
   overflow: hidden;
   font-family: 'SF Pro Display', -apple-system, sans-serif;
 }
 
-/* Studio Canvas Container - Fixes overlap and text bleeding */
+/* Studio Canvas Container */
 .studio-canvas {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 20px 16px;
+  padding: 16px 14px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding-bottom: 90px; /* Essential padding so bottom nav doesn't clip content */
+  gap: 14px;
+  padding-bottom: 84px;
 }
 
-/* OmniMotion CapCut Full-Viewport Mode: zero padding and zero clipping */
 .studio-canvas.studio-canvas-motion {
   padding: 0 !important;
   padding-bottom: 0 !important;
@@ -175,8 +163,8 @@ html, body, #root {
 
 /* Unified Card Component for Mobile Viewports */
 .omni-studio-card {
-  background: linear-gradient(145deg, #0d0d0d, #070707);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #121318;
+  border: 1px solid #27272a;
   border-radius: 14px;
   padding: 16px;
   display: flex;
@@ -184,7 +172,6 @@ html, body, #root {
   gap: 12px;
 }
 
-/* Mobile Preview Window - Forces CapCut/Suno styles to behave on screen */
 .studio-preview-viewport {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -192,10 +179,9 @@ html, body, #root {
   border-radius: 8px;
   overflow: hidden;
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  border: 1px solid #27272a;
 }
 
-/* Mobile Interactive Controls and Slider Rows */
 .omni-control-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -203,18 +189,19 @@ html, body, #root {
 }
 
 .omni-mobile-btn {
-  height: 48px; /* Ideal thumb touch target size */
-  background-color: #111111;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  height: 48px;
+  background-color: #18181b;
+  border: 1px solid #27272a;
   border-radius: 8px;
   color: #ffffff;
   font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .omni-mobile-btn:active {
-  background-color: #222222; /* Haptic press state visual feedback */
+  background-color: #27272a;
+  border-color: #dc2626;
 }

@@ -390,24 +390,24 @@ class OmniScreenAccessibilityService : AccessibilityService() {
 </manifest>`;
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto p-4 space-y-4 text-slate-100 bg-[#000000]">
+    <div className="flex flex-col h-full overflow-y-auto p-4 space-y-4 text-zinc-100 bg-black font-mono">
       {/* HEADER HERO */}
-      <div className="p-4 rounded-2xl bg-[#0B0B0C] border border-[#00f2fe]/40 shadow-[0_0_25px_rgba(0,242,254,0.2)] space-y-2.5">
+      <div className="p-4 rounded-2xl bg-[#0a0a0c] border border-red-600/40 shadow-[0_0_25px_rgba(220,38,38,0.2)] space-y-2.5">
         <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-xl bg-black border border-[#00f2fe]/50 flex items-center justify-center text-[#00f2fe] shadow-[0_0_15px_rgba(0,242,254,0.3)]">
-            <Cpu className="w-5 h-5 text-[#00f2fe]" />
+          <div className="w-10 h-10 rounded-xl bg-black border border-red-600/50 flex items-center justify-center text-red-400 shadow-[0_0_15px_rgba(220,38,38,0.3)]">
+            <Cpu className="w-5 h-5 text-red-400" />
           </div>
           <div>
             <h2 className="text-sm font-bold text-white font-mono tracking-wide">
               SYSTEM-WIDE OS KEYBOARD EXTENSION
             </h2>
-            <p className="text-xs text-slate-400 font-mono">
+            <p className="text-xs text-zinc-400 font-mono">
               Viewport Awareness via ReplayKit (iOS) & Accessibility Node Traversal (Android)
             </p>
           </div>
         </div>
 
-        <p className="text-xs text-slate-300 leading-relaxed font-mono text-[11px]">
+        <p className="text-xs text-zinc-300 leading-relaxed font-mono text-[11px]">
           These production-grade extension architectures hook into the host operating system to continuously monitor conversations across WhatsApp, Slack, Gmail, and Hinge, feeding real-time context to the sliding suggestion carousel.
         </p>
 
@@ -418,8 +418,8 @@ class OmniScreenAccessibilityService : AccessibilityService() {
               onClick={() => { setSelectedOS('ios'); setActiveFile('controller'); }}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition ${
                 selectedOS === 'ios'
-                  ? 'bg-[#00f2fe] text-black shadow-[0_0_15px_rgba(0,242,254,0.4)]'
-                  : 'bg-black text-slate-400 border border-white/10 hover:text-white'
+                  ? 'bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.4)]'
+                  : 'bg-black text-zinc-400 border border-zinc-800 hover:text-white'
               }`}
             >
               <Apple className="w-3.5 h-3.5" />
@@ -430,8 +430,8 @@ class OmniScreenAccessibilityService : AccessibilityService() {
               onClick={() => { setSelectedOS('android'); setActiveFile('ime'); }}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition ${
                 selectedOS === 'android'
-                  ? 'bg-[#7f00ff] text-white shadow-[0_0_15px_rgba(127,0,255,0.4)]'
-                  : 'bg-black text-slate-400 border border-white/10 hover:text-white'
+                  ? 'bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.4)]'
+                  : 'bg-black text-zinc-400 border border-zinc-800 hover:text-white'
               }`}
             >
               <Smartphone className="w-3.5 h-3.5" />
@@ -449,8 +449,8 @@ class OmniScreenAccessibilityService : AccessibilityService() {
               onClick={() => setActiveFile('controller')}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition border ${
                 activeFile === 'controller'
-                  ? 'bg-[#0B0B0C] text-[#00f2fe] border-[#00f2fe]/60 shadow-[0_0_10px_rgba(0,242,254,0.2)]'
-                  : 'bg-black text-slate-400 border-white/5'
+                  ? 'bg-red-950/40 text-red-400 border-red-600/60 shadow-[0_0_10px_rgba(220,38,38,0.2)]'
+                  : 'bg-black text-zinc-400 border-zinc-800'
               }`}
             >
               OmniKeyboardViewController.swift
@@ -459,8 +459,8 @@ class OmniScreenAccessibilityService : AccessibilityService() {
               onClick={() => setActiveFile('service')}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition border ${
                 activeFile === 'service'
-                  ? 'bg-[#0B0B0C] text-[#00f2fe] border-[#00f2fe]/60 shadow-[0_0_10px_rgba(0,242,254,0.2)]'
-                  : 'bg-black text-slate-400 border-white/5'
+                  ? 'bg-red-950/40 text-red-400 border-red-600/60 shadow-[0_0_10px_rgba(220,38,38,0.2)]'
+                  : 'bg-black text-zinc-400 border-zinc-800'
               }`}
             >
               OmniScreenCognitionService.swift
@@ -469,8 +469,8 @@ class OmniScreenAccessibilityService : AccessibilityService() {
               onClick={() => setActiveFile('plist')}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition border ${
                 activeFile === 'plist'
-                  ? 'bg-[#0B0B0C] text-[#00f2fe] border-[#00f2fe]/60 shadow-[0_0_10px_rgba(0,242,254,0.2)]'
-                  : 'bg-black text-slate-400 border-white/5'
+                  ? 'bg-red-950/40 text-red-400 border-red-600/60 shadow-[0_0_10px_rgba(220,38,38,0.2)]'
+                  : 'bg-black text-zinc-400 border-zinc-800'
               }`}
             >
               Info.plist
@@ -482,8 +482,8 @@ class OmniScreenAccessibilityService : AccessibilityService() {
               onClick={() => setActiveFile('ime')}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition border ${
                 activeFile === 'ime'
-                  ? 'bg-[#0B0B0C] text-[#c084fc] border-[#7f00ff]/60 shadow-[0_0_10px_rgba(127,0,255,0.2)]'
-                  : 'bg-black text-slate-400 border-white/5'
+                  ? 'bg-red-950/40 text-red-400 border-red-600/60 shadow-[0_0_10px_rgba(220,38,38,0.2)]'
+                  : 'bg-black text-zinc-400 border-zinc-800'
               }`}
             >
               OmniInputMethodService.kt
@@ -492,8 +492,8 @@ class OmniScreenAccessibilityService : AccessibilityService() {
               onClick={() => setActiveFile('accessibility')}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition border ${
                 activeFile === 'accessibility'
-                  ? 'bg-[#0B0B0C] text-[#c084fc] border-[#7f00ff]/60 shadow-[0_0_10px_rgba(127,0,255,0.2)]'
-                  : 'bg-black text-slate-400 border-white/5'
+                  ? 'bg-red-950/40 text-red-400 border-red-600/60 shadow-[0_0_10px_rgba(220,38,38,0.2)]'
+                  : 'bg-black text-zinc-400 border-zinc-800'
               }`}
             >
               OmniScreenAccessibilityService.kt
@@ -502,8 +502,8 @@ class OmniScreenAccessibilityService : AccessibilityService() {
               onClick={() => setActiveFile('manifest')}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition border ${
                 activeFile === 'manifest'
-                  ? 'bg-[#0B0B0C] text-[#c084fc] border-[#7f00ff]/60 shadow-[0_0_10px_rgba(127,0,255,0.2)]'
-                  : 'bg-black text-slate-400 border-white/5'
+                  ? 'bg-red-950/40 text-red-400 border-red-600/60 shadow-[0_0_10px_rgba(220,38,38,0.2)]'
+                  : 'bg-black text-zinc-400 border-zinc-800'
               }`}
             >
               AndroidManifest.xml
@@ -513,9 +513,9 @@ class OmniScreenAccessibilityService : AccessibilityService() {
       </div>
 
       {/* CODE VIEWPORT */}
-      <div className="rounded-2xl bg-[#0B0B0C] border border-white/10 overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between px-3.5 py-2 bg-black border-b border-white/10 text-xs">
-          <span className="font-mono text-[#00f2fe] text-[11px]">
+      <div className="rounded-2xl bg-[#121318] border border-zinc-800 overflow-hidden shadow-2xl">
+        <div className="flex items-center justify-between px-3.5 py-2 bg-black border-b border-zinc-800 text-xs">
+          <span className="font-mono text-red-400 text-[11px]">
             {selectedOS === 'ios'
               ? activeFile === 'controller'
                 ? 'OmniKeyboardViewController.swift'
@@ -545,10 +545,10 @@ class OmniScreenAccessibilityService : AccessibilityService() {
                   : androidManifest;
               handleCopy(code, `${selectedOS}_${activeFile}`);
             }}
-            className="flex items-center gap-1 text-[11px] font-mono text-slate-300 hover:text-white"
+            className="flex items-center gap-1 text-[11px] font-mono text-zinc-300 hover:text-white"
           >
             {copiedKey === `${selectedOS}_${activeFile}` ? (
-              <Check className="w-3.5 h-3.5 text-[#00f2fe]" />
+              <Check className="w-3.5 h-3.5 text-red-400" />
             ) : (
               <Copy className="w-3.5 h-3.5" />
             )}
@@ -556,7 +556,7 @@ class OmniScreenAccessibilityService : AccessibilityService() {
           </button>
         </div>
 
-        <pre className="p-3 text-[11px] font-mono text-slate-300 overflow-x-auto whitespace-pre max-h-72 leading-relaxed bg-[#050508]">
+        <pre className="p-3 text-[11px] font-mono text-zinc-300 overflow-x-auto whitespace-pre max-h-72 leading-relaxed bg-black">
           {selectedOS === 'ios'
             ? activeFile === 'controller'
               ? iosViewController

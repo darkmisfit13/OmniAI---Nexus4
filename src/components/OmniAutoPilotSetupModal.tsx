@@ -238,43 +238,43 @@ export const OmniAutoPilotSetupModal: React.FC<OmniAutoPilotSetupModalProps> = (
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 font-sans select-none animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 font-sans select-none animate-in fade-in duration-200">
       
-      <div className="w-full max-w-2xl bg-[#0e0c18] border border-white/15 rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
+      <div className="w-full max-w-2xl bg-[#0a0a0c] border border-zinc-800 rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
         
         {/* MODAL HEADER */}
-        <div className="p-4 bg-[#14121f] border-b border-white/10 flex items-center justify-between shrink-0">
+        <div className="p-4 bg-[#121318] border-b border-zinc-800 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#6c63ff] to-[#00f2fe] flex items-center justify-center text-slate-950 font-black shadow-lg shadow-[#6c63ff]/30">
-              <Zap className="w-4 h-4 text-slate-950 fill-current" />
+            <div className="w-9 h-9 rounded-xl bg-red-950/80 border border-red-600/40 flex items-center justify-center text-red-400 font-black shadow-lg shadow-red-950/30">
+              <Zap className="w-4 h-4 text-red-400 fill-current" />
             </div>
             <div>
               <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                 AUTO-PILOT & VOICE CLONING SETUP
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#6c63ff]/20 text-[#a594fd] border border-[#6c63ff]/40">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-red-950/60 text-red-300 border border-red-800/40">
                   TRAIN LIKE ME
                 </span>
               </h2>
-              <p className="text-[11px] text-slate-400">Teach OmniAI your authentic habits, humor, and speech clone</p>
+              <p className="text-[11px] text-zinc-400">Teach OmniAI your authentic habits, humor, and speech clone</p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition"
+            className="p-1.5 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white transition"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* STEP TOGGLE SWITCHER */}
-        <div className="p-2 bg-[#0b0a14] border-b border-white/10 flex items-center justify-center gap-2 shrink-0">
+        <div className="p-2 bg-[#0a0a0c] border-b border-zinc-800 flex items-center justify-center gap-2 shrink-0">
           <button
             onClick={() => setActiveStep('calibrate')}
             className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold transition flex items-center gap-1.5 ${
               activeStep === 'calibrate'
-                ? 'bg-[#6c63ff] text-white shadow-md shadow-[#6c63ff]/30'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-red-600 text-white shadow-md shadow-red-950/40'
+                : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
             <Bot className="w-3.5 h-3.5" /> 1. Style & Humor Calibration
@@ -283,8 +283,8 @@ export const OmniAutoPilotSetupModal: React.FC<OmniAutoPilotSetupModalProps> = (
             onClick={() => setActiveStep('voice_clone')}
             className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold transition flex items-center gap-1.5 ${
               activeStep === 'voice_clone'
-                ? 'bg-[#00f2fe] text-slate-950 shadow-md shadow-[#00f2fe]/30'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-red-600 text-white shadow-md shadow-red-950/40'
+                : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
             <Mic className="w-3.5 h-3.5" /> 2. Voice Cloning Training
@@ -297,20 +297,20 @@ export const OmniAutoPilotSetupModal: React.FC<OmniAutoPilotSetupModalProps> = (
           {/* STEP 1: CALIBRATION QUESTIONS */}
           {activeStep === 'calibrate' && (
             <div className="space-y-6">
-              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-[#6c63ff]/15 to-transparent border border-[#6c63ff]/30 flex items-center gap-3">
-                <Sparkles className="w-5 h-5 text-[#00f2fe] shrink-0" />
-                <p className="text-xs text-slate-300 leading-relaxed">
+              <div className="p-3.5 rounded-2xl bg-red-950/20 border border-red-800/30 flex items-center gap-3">
+                <Sparkles className="w-5 h-5 text-red-400 shrink-0" />
+                <p className="text-xs text-zinc-300 leading-relaxed">
                   OmniAI analyzes these responses to calibrate its internal prompt cascade. When <strong>Auto-Pilot Mode</strong> answers messages for you, it sounds unequivocally like you.
                 </p>
               </div>
 
               {CALIBRATION_QUESTIONS.map((q, qIndex) => (
-                <div key={q.id} className="p-4 rounded-2xl bg-[#14121f] border border-white/10 space-y-3">
+                <div key={q.id} className="p-4 rounded-2xl bg-[#121318] border border-zinc-800 space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono text-[#a594fd] uppercase tracking-wider font-bold">
+                    <span className="text-[10px] font-mono text-red-400 uppercase tracking-wider font-bold">
                       Question {qIndex + 1} • {q.category}
                     </span>
-                    <span className="text-xs text-emerald-400 font-mono">
+                    <span className="text-xs text-red-400 font-mono">
                       {answers[q.id] ? '✓ Configured' : 'Required'}
                     </span>
                   </div>
@@ -327,8 +327,8 @@ export const OmniAutoPilotSetupModal: React.FC<OmniAutoPilotSetupModalProps> = (
                           onClick={() => handleSelectAnswer(q.id, opt.id)}
                           className={`p-3 rounded-xl border text-left transition flex flex-col justify-between ${
                             isSelected
-                              ? 'bg-[#6c63ff]/25 border-[#00f2fe] text-white shadow-[0_0_12px_rgba(0,242,254,0.25)]'
-                              : 'bg-[#0b0a14] hover:bg-[#1a1729] border-white/10 text-slate-400 hover:text-slate-200'
+                              ? 'bg-red-950/50 border-red-500 text-white shadow-[0_0_12px_rgba(220,38,38,0.25)]'
+                              : 'bg-black hover:bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'
                           }`}
                         >
                           <div>
@@ -336,9 +336,9 @@ export const OmniAutoPilotSetupModal: React.FC<OmniAutoPilotSetupModalProps> = (
                               <span className="text-xs font-bold font-mono text-white">
                                 {opt.label}
                               </span>
-                              {isSelected && <Check className="w-3.5 h-3.5 text-[#00f2fe]" />}
+                              {isSelected && <Check className="w-3.5 h-3.5 text-red-400" />}
                             </div>
-                            <p className="text-[10px] text-slate-400 italic leading-relaxed">
+                            <p className="text-[10px] text-zinc-400 italic leading-relaxed">
                               {opt.example}
                             </p>
                           </div>
@@ -355,32 +355,32 @@ export const OmniAutoPilotSetupModal: React.FC<OmniAutoPilotSetupModalProps> = (
           {activeStep === 'voice_clone' && (
             <div className="space-y-6">
               
-              <div className="p-4 rounded-2xl bg-[#14121f] border border-white/10 space-y-4">
+              <div className="p-4 rounded-2xl bg-[#121318] border border-zinc-800 space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#00f2fe]/20 text-[#00f2fe] flex items-center justify-center font-bold">
+                  <div className="w-10 h-10 rounded-2xl bg-red-950/60 text-red-400 border border-red-800/40 flex items-center justify-center font-bold">
                     <Mic className="w-5 h-5" />
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-white">Record Your Voice Training Sample</h3>
-                    <p className="text-xs text-slate-400">Read the calibration sentence below while recording.</p>
+                    <p className="text-xs text-zinc-400">Read the calibration sentence below while recording.</p>
                   </div>
                 </div>
 
                 {/* Script Box */}
-                <div className="p-3.5 rounded-xl bg-black/60 border border-white/15 text-xs text-slate-200 font-mono leading-relaxed relative">
-                  <span className="text-[9px] uppercase tracking-widest text-[#00f2fe] block mb-1 font-bold">Training Sample Script:</span>
+                <div className="p-3.5 rounded-xl bg-black border border-zinc-800 text-xs text-zinc-200 font-mono leading-relaxed relative">
+                  <span className="text-[9px] uppercase tracking-widest text-red-400 block mb-1 font-bold">Training Sample Script:</span>
                   "{testScript}"
                 </div>
 
                 {/* Recorder Controls */}
-                <div className="flex items-center justify-between p-3 rounded-xl bg-[#0b0a14] border border-white/10">
+                <div className="flex items-center justify-between p-3 rounded-xl bg-black border border-zinc-800">
                   <div className="flex items-center gap-2">
                     {isRecording ? (
-                      <span className="w-3 h-3 rounded-full bg-rose-500 animate-ping" />
+                      <span className="w-3 h-3 rounded-full bg-red-500 animate-ping" />
                     ) : (
-                      <span className="w-3 h-3 rounded-full bg-slate-600" />
+                      <span className="w-3 h-3 rounded-full bg-zinc-600" />
                     )}
-                    <span className="text-xs font-mono font-bold text-slate-300">
+                    <span className="text-xs font-mono font-bold text-zinc-300">
                       {isRecording ? `Recording Voice Sample... ${recordingSeconds}s` : recordedAudioUrl ? 'Sample Recorded' : 'Ready to Record'}
                     </span>
                   </div>
@@ -389,14 +389,14 @@ export const OmniAutoPilotSetupModal: React.FC<OmniAutoPilotSetupModalProps> = (
                     {!isRecording ? (
                       <button
                         onClick={startRecording}
-                        className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-rose-600/30 transition"
+                        className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-red-600/30 transition"
                       >
                         <Mic className="w-3.5 h-3.5" /> Start Recording
                       </button>
                     ) : (
                       <button
                         onClick={stopRecording}
-                        className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/30 transition"
+                        className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs flex items-center gap-1.5 transition"
                       >
                         <Square className="w-3.5 h-3.5 fill-current" /> Stop & Process
                       </button>
@@ -408,9 +408,9 @@ export const OmniAutoPilotSetupModal: React.FC<OmniAutoPilotSetupModalProps> = (
                           const audio = new Audio(recordedAudioUrl);
                           audio.play();
                         }}
-                        className="px-3 py-2 rounded-xl bg-[#14121f] hover:bg-white/10 border border-white/10 text-xs text-slate-200 flex items-center gap-1"
+                        className="px-3 py-2 rounded-xl bg-[#121318] hover:bg-zinc-800 border border-zinc-800 text-xs text-zinc-200 flex items-center gap-1"
                       >
-                        <Play className="w-3.5 h-3.5 text-[#00f2fe]" /> Play Back
+                        <Play className="w-3.5 h-3.5 text-red-400" /> Play Back
                       </button>
                     )}
                   </div>
@@ -418,16 +418,16 @@ export const OmniAutoPilotSetupModal: React.FC<OmniAutoPilotSetupModalProps> = (
               </div>
 
               {/* Synthesized Neural Voice Calibration Sliders */}
-              <div className="p-4 rounded-2xl bg-[#14121f] border border-white/10 space-y-4">
+              <div className="p-4 rounded-2xl bg-[#121318] border border-zinc-800 space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-xs font-bold text-white font-mono">
-                    <Sliders className="w-4 h-4 text-[#6c63ff]" />
+                    <Sliders className="w-4 h-4 text-red-400" />
                     <span>Neural Cloned Voice Synthesis Parameters</span>
                   </div>
                   <button
                     onClick={handleTestClonedVoice}
                     disabled={isTestingVoice}
-                    className="px-3 py-1 rounded-lg bg-[#00f2fe]/20 text-[#00f2fe] border border-[#00f2fe]/40 text-xs font-mono font-bold flex items-center gap-1.5 hover:bg-[#00f2fe]/30 transition"
+                    className="px-3 py-1 rounded-lg bg-red-950/40 text-red-300 border border-red-600/40 text-xs font-mono font-bold flex items-center gap-1.5 hover:bg-red-950/60 transition"
                   >
                     <Volume2 className="w-3.5 h-3.5" />
                     {isTestingVoice ? 'Speaking...' : 'Test Cloned Voice'}
@@ -436,10 +436,10 @@ export const OmniAutoPilotSetupModal: React.FC<OmniAutoPilotSetupModalProps> = (
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Pitch Shift Slider */}
-                  <div className="space-y-1.5 p-3 rounded-xl bg-[#0b0a14] border border-white/10">
+                  <div className="space-y-1.5 p-3 rounded-xl bg-black border border-zinc-800">
                     <div className="flex justify-between text-xs font-mono">
-                      <span className="text-slate-400">Voice Pitch / Timbre:</span>
-                      <span className="text-[#00f2fe] font-bold">{clonedPitch.toFixed(2)}x</span>
+                      <span className="text-zinc-400">Voice Pitch / Timbre:</span>
+                      <span className="text-red-400 font-bold">{clonedPitch.toFixed(2)}x</span>
                     </div>
                     <input
                       type="range"
@@ -448,9 +448,9 @@ export const OmniAutoPilotSetupModal: React.FC<OmniAutoPilotSetupModalProps> = (
                       step="0.05"
                       value={clonedPitch}
                       onChange={(e) => setClonedPitch(parseFloat(e.target.value))}
-                      className="w-full accent-[#00f2fe] h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+                      className="w-full accent-red-600 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
                     />
-                    <div className="flex justify-between text-[9px] font-mono text-slate-500">
+                    <div className="flex justify-between text-[9px] font-mono text-zinc-500">
                       <span>Deeper</span>
                       <span>Natural</span>
                       <span>Higher</span>
@@ -458,10 +458,10 @@ export const OmniAutoPilotSetupModal: React.FC<OmniAutoPilotSetupModalProps> = (
                   </div>
 
                   {/* Speech Rate Slider */}
-                  <div className="space-y-1.5 p-3 rounded-xl bg-[#0b0a14] border border-white/10">
+                  <div className="space-y-1.5 p-3 rounded-xl bg-black border border-zinc-800">
                     <div className="flex justify-between text-xs font-mono">
-                      <span className="text-slate-400">Pacing & Cadence:</span>
-                      <span className="text-[#6c63ff] font-bold">{clonedRate.toFixed(2)}x</span>
+                      <span className="text-zinc-400">Pacing & Cadence:</span>
+                      <span className="text-red-400 font-bold">{clonedRate.toFixed(2)}x</span>
                     </div>
                     <input
                       type="range"
@@ -470,9 +470,9 @@ export const OmniAutoPilotSetupModal: React.FC<OmniAutoPilotSetupModalProps> = (
                       step="0.05"
                       value={clonedRate}
                       onChange={(e) => setClonedRate(parseFloat(e.target.value))}
-                      className="w-full accent-[#6c63ff] h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+                      className="w-full accent-red-600 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
                     />
-                    <div className="flex justify-between text-[9px] font-mono text-slate-500">
+                    <div className="flex justify-between text-[9px] font-mono text-zinc-500">
                       <span>Deliberate</span>
                       <span>Normal</span>
                       <span>Brisk / Fast</span>
@@ -487,22 +487,22 @@ export const OmniAutoPilotSetupModal: React.FC<OmniAutoPilotSetupModalProps> = (
         </div>
 
         {/* MODAL FOOTER */}
-        <div className="p-4 bg-[#14121f] border-t border-white/10 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
+        <div className="p-4 bg-[#121318] border-t border-zinc-800 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
+            <ShieldCheck className="w-4 h-4 text-red-400" />
             <span className="hidden sm:inline">Encrypted On-Device Neural Profile</span>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition"
+              className="px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-300 text-xs font-bold transition"
             >
               Cancel
             </button>
             <button
               onClick={handleSaveAll}
-              className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#6c63ff] to-[#00f2fe] hover:opacity-90 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-[#6c63ff]/30 transition"
+              className="px-5 py-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:brightness-110 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-red-600/30 transition"
             >
               {saveSuccess ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
               {saveSuccess ? 'Saved Successfully!' : 'Save & Deploy Persona'}

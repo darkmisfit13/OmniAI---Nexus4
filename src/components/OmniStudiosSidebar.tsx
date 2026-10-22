@@ -74,20 +74,20 @@ export const OmniStudiosSidebar: React.FC<OmniStudiosSidebarProps> = ({
       />
 
       {/* Slide-over Drawer from Left */}
-      <div className="relative w-80 max-w-[85vw] bg-[#090b14] border-r border-slate-800/80 h-full shadow-2xl flex flex-col z-10 animate-in slide-in-from-left duration-200">
+      <div className="relative w-80 max-w-[85vw] bg-[#0a0a0c] border-r border-zinc-800 h-full shadow-2xl flex flex-col z-10 animate-in slide-in-from-left duration-200">
         
         {/* Drawer Header */}
-        <div className="p-3.5 border-b border-slate-800 bg-[#07090f] flex items-center justify-between">
+        <div className="p-3.5 border-b border-zinc-800 bg-[#121318] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#00f2fe] animate-pulse shadow-[0_0_8px_#00f2fe]" />
-            <h3 className="font-bold text-xs font-mono uppercase tracking-widest text-slate-300">
+            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(220,38,38,0.6)]" />
+            <h3 className="font-bold text-xs font-mono uppercase tracking-widest text-zinc-300">
               Navigation Drawer
             </h3>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all"
             title="Close Drawer"
           >
             <X className="w-4 h-4" />
@@ -95,44 +95,44 @@ export const OmniStudiosSidebar: React.FC<OmniStudiosSidebarProps> = ({
         </div>
 
         {/* TOP PROMINENT BUTTON: OmniAI - Your Digital Shadow */}
-        <div className="p-3 border-b border-slate-800/80 bg-gradient-to-b from-[#0c0f1c] to-[#090b14]">
+        <div className="p-3 border-b border-zinc-800 bg-[#0a0a0c]">
           <button
             onClick={() => {
               onOpenOmniAIChat?.();
               onClose();
             }}
-            className="w-full p-3 rounded-2xl bg-gradient-to-r from-cyan-950/80 via-[#0e1726] to-purple-950/80 border border-cyan-500/50 hover:border-cyan-400 text-left transition-all shadow-[0_0_20px_rgba(0,242,254,0.15)] group relative overflow-hidden active:scale-[0.98]"
+            className="w-full p-3 rounded-2xl bg-[#121318] border border-red-600/40 hover:border-red-500 text-left transition-all shadow-[0_0_20px_rgba(220,38,38,0.15)] group relative overflow-hidden active:scale-[0.98]"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 bg-red-600/5 opacity-0 group-hover:opacity-100 transition-opacity" />
             
             <div className="flex items-center gap-3 relative z-10">
-              <div className="w-10 h-10 rounded-xl bg-black border border-cyan-500/40 flex items-center justify-center shrink-0 shadow-inner">
+              <div className="w-10 h-10 rounded-xl bg-black border border-red-600/40 flex items-center justify-center shrink-0 shadow-inner">
                 <HoloOrb phase="idle" size="xs" />
               </div>
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <h2 className="font-bold text-sm text-white tracking-wide group-hover:text-cyan-300 transition-colors">
+                  <h2 className="font-bold text-sm text-white tracking-wide group-hover:text-red-400 transition-colors">
                     OmniAI Chat
                   </h2>
-                  <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-mono font-bold">
+                  <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-red-950/60 text-red-400 border border-red-600/40 font-mono font-bold">
                     DEDICATED
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400 tracking-wide font-sans mt-0.5">
+                <p className="text-[11px] text-zinc-400 tracking-wide font-sans mt-0.5">
                   Full-Page Chat & Multi-LLM Council
                 </p>
               </div>
 
-              <ChevronRight className="w-4 h-4 text-cyan-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
+              <ChevronRight className="w-4 h-4 text-red-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
             </div>
           </button>
         </div>
 
         {/* Studios Section Header */}
-        <div className="px-3 pt-3 pb-1 flex items-center justify-between text-[10px] font-mono uppercase text-slate-500 font-bold">
+        <div className="px-3 pt-3 pb-1 flex items-center justify-between text-[10px] font-mono uppercase text-zinc-500 font-bold">
           <span>CREATIVE STUDIOS ({studios.length})</span>
-          <span className="text-[9px] text-cyan-400/80 lowercase">spur-of-moment ready</span>
+          <span className="text-[9px] text-red-400/80 lowercase">spur-of-moment ready</span>
         </div>
 
         {/* Studios List */}

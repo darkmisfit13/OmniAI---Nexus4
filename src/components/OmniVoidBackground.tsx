@@ -30,23 +30,23 @@ export const OmniVoidBackground: React.FC = () => {
     // 3. Dark Geometric Matrix Wireframe Grid
     const geometry = new THREE.PlaneGeometry(240, 240, 28, 28);
     const material = new THREE.MeshBasicMaterial({
-      color: 0x00f2fe, // Neon cyan matrix grid with subtle glow
+      color: 0xdc2626, // Deep crimson matrix grid with subtle glow
       wireframe: true,
       transparent: true,
-      opacity: 0.14,
+      opacity: 0.12,
     });
 
     const meshGrid = new THREE.Mesh(geometry, material);
     meshGrid.rotation.x = -Math.PI / 2.5;
     scene.add(meshGrid);
 
-    // Secondary subtle violet floor grid for depth
+    // Secondary subtle deep charcoal/ruby floor grid for depth
     const subGeometry = new THREE.PlaneGeometry(260, 260, 14, 14);
     const subMaterial = new THREE.MeshBasicMaterial({
-      color: 0x7f00ff,
+      color: 0x27272a,
       wireframe: true,
       transparent: true,
-      opacity: 0.08,
+      opacity: 0.18,
     });
     const subGrid = new THREE.Mesh(subGeometry, subMaterial);
     subGrid.position.z = -15;

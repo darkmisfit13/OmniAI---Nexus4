@@ -252,52 +252,52 @@ export const LiveCallView: React.FC<LiveCallViewProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#07060d]/95 backdrop-blur-xl flex flex-col justify-between font-sans select-none animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col justify-between font-sans select-none animate-in fade-in duration-200">
       
       {/* 1. TOP CALL STATUS & CALLER HEADER */}
-      <div className="p-4 pt-6 flex flex-col items-center border-b border-white/10 bg-[#0f0e1a]/80 shadow-2xl relative">
+      <div className="p-4 pt-6 flex flex-col items-center border-b border-zinc-800 bg-[#0a0a0c] shadow-2xl relative">
         <button
           onClick={handleEndCall}
-          className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition"
+          className="absolute top-4 right-4 p-2 rounded-full bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 hover:text-white transition"
           title="Minimize Call"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Live Call Signal Pill */}
-        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono font-bold shadow-lg mb-3">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/40 border border-red-600/40 text-red-300 text-xs font-mono font-bold shadow-lg mb-3">
+          <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
           <span>LIVE PHONE CALL • {formatCallTime(callSeconds)}</span>
         </div>
 
         {/* Caller Avatar & Meta */}
         <div className="relative mb-2">
-          <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-[#6c63ff] to-[#00f2fe] p-1 shadow-2xl shadow-[#6c63ff]/40">
-            <div className="w-full h-full rounded-[22px] bg-[#14121f] flex items-center justify-center text-3xl">
+          <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-red-600 to-red-800 p-1 shadow-2xl shadow-red-950/40">
+            <div className="w-full h-full rounded-[22px] bg-[#121318] flex items-center justify-center text-3xl">
               {caller.avatar}
             </div>
           </div>
           {aiSpeaking && (
-            <span className="absolute -bottom-1 -right-1 px-2 py-0.5 rounded-full bg-[#00f2fe] text-slate-950 text-[9px] font-mono font-black animate-pulse shadow-md">
+            <span className="absolute -bottom-1 -right-1 px-2 py-0.5 rounded-full bg-red-600 text-white text-[9px] font-mono font-black animate-pulse shadow-md">
               SPEAKING
             </span>
           )}
         </div>
 
         <h2 className="text-xl font-bold text-white tracking-tight">{caller.name}</h2>
-        <p className="text-xs text-slate-400 font-mono flex items-center gap-1.5 mt-0.5">
-          <span>{caller.role}</span> • <span className="text-[#00f2fe]">{caller.company}</span>
+        <p className="text-xs text-zinc-400 font-mono flex items-center gap-1.5 mt-0.5">
+          <span>{caller.role}</span> • <span className="text-red-400">{caller.company}</span>
         </p>
 
         {/* Auto-Pilot Takeover Master Switch */}
-        <div className="mt-3.5 flex items-center gap-3 bg-[#14121f] p-1.5 px-3 rounded-2xl border border-white/10 shadow-lg">
+        <div className="mt-3.5 flex items-center gap-3 bg-[#121318] p-1.5 px-3 rounded-2xl border border-zinc-800 shadow-lg">
           <div className="flex items-center gap-2">
-            <Zap className={`w-4 h-4 ${isAutoTakeover ? 'text-[#00f2fe] animate-bounce' : 'text-slate-500'}`} />
+            <Zap className={`w-4 h-4 ${isAutoTakeover ? 'text-red-400 animate-bounce' : 'text-zinc-500'}`} />
             <div>
               <span className="text-xs font-bold text-white block leading-tight">
                 AI Voice Takeover
               </span>
-              <span className="text-[10px] text-slate-400 font-mono">
+              <span className="text-[10px] text-zinc-400 font-mono">
                 {isAutoTakeover ? 'Speaking in your cloned voice' : 'AI suggests, you tap to speak'}
               </span>
             </div>
@@ -306,8 +306,8 @@ export const LiveCallView: React.FC<LiveCallViewProps> = ({
             onClick={() => setIsAutoTakeover(!isAutoTakeover)}
             className={`px-3 py-1 rounded-xl text-xs font-mono font-bold transition shadow ${
               isAutoTakeover 
-                ? 'bg-gradient-to-r from-[#6c63ff] to-[#00f2fe] text-slate-950' 
-                : 'bg-white/10 text-slate-300 hover:bg-white/15'
+                ? 'bg-gradient-to-r from-red-600 to-red-700 text-white' 
+                : 'bg-zinc-900 border border-zinc-800 text-zinc-300 hover:bg-zinc-800'
             }`}
           >
             {isAutoTakeover ? 'AUTO: ON' : 'MANUAL'}
@@ -319,16 +319,16 @@ export const LiveCallView: React.FC<LiveCallViewProps> = ({
       <div className="flex-1 overflow-y-auto p-4 space-y-3 max-w-xl mx-auto w-full">
         
         {/* Audio Waveform Simulation */}
-        <div className="p-2.5 rounded-xl bg-[#14121f]/60 border border-white/10 flex items-center justify-between font-mono text-[11px] text-slate-400">
+        <div className="p-2.5 rounded-xl bg-[#121318] border border-zinc-800 flex items-center justify-between font-mono text-[11px] text-zinc-400">
           <div className="flex items-center gap-2">
-            <Activity className="w-3.5 h-3.5 text-[#00f2fe] animate-pulse" />
+            <Activity className="w-3.5 h-3.5 text-red-500 animate-pulse" />
             <span>Audio Stream Cognition:</span>
           </div>
           <div className="flex items-center gap-1">
             {[18, 35, 12, 45, 28, 14, 50, 22, 38, 15, 30].map((h, i) => (
               <span
                 key={i}
-                className="w-1 bg-gradient-to-t from-[#6c63ff] to-[#00f2fe] rounded-full animate-pulse"
+                className="w-1 bg-gradient-to-t from-red-600 to-red-400 rounded-full animate-pulse"
                 style={{
                   height: `${h}px`,
                   animationDuration: `${0.4 + (i % 5) * 0.2}s`
@@ -336,7 +336,7 @@ export const LiveCallView: React.FC<LiveCallViewProps> = ({
               />
             ))}
           </div>
-          <span className="text-emerald-400 font-bold">16kHz HD</span>
+          <span className="text-red-400 font-bold">16kHz HD</span>
         </div>
 
         {/* Live Transcript Bubbles */}
@@ -349,17 +349,17 @@ export const LiveCallView: React.FC<LiveCallViewProps> = ({
               key={index}
               className={`flex flex-col ${isCaller ? 'items-start' : 'items-end'} animate-in fade-in slide-in-from-bottom-2`}
             >
-              <div className="flex items-center gap-1.5 mb-1 text-[10px] font-mono text-slate-500">
+              <div className="flex items-center gap-1.5 mb-1 text-[10px] font-mono text-zinc-500">
                 <span>{isCaller ? caller.name : isAI ? 'OmniAI (Your Cloned Voice)' : 'You (Spoken)'}</span>
                 <span>• {msg.time}</span>
               </div>
               <div
                 className={`p-3 rounded-2xl max-w-[85%] text-xs leading-relaxed shadow-lg ${
                   isCaller
-                    ? 'bg-[#1b182a] text-slate-100 border border-white/10 rounded-tl-sm'
+                    ? 'bg-[#121318] text-zinc-100 border border-zinc-800 rounded-tl-sm'
                     : isAI
-                    ? 'bg-gradient-to-r from-[#6c63ff]/30 to-[#00f2fe]/30 text-white border border-[#00f2fe]/40 rounded-tr-sm shadow-[0_0_15px_rgba(0,242,254,0.15)]'
-                    : 'bg-[#00f2fe] text-slate-950 font-medium rounded-tr-sm'
+                    ? 'bg-gradient-to-r from-red-950/60 to-red-900/60 text-white border border-red-600/40 rounded-tr-sm shadow-[0_0_15px_rgba(220,38,38,0.2)]'
+                    : 'bg-red-600 text-white font-medium rounded-tr-sm'
                 }`}
               >
                 {msg.text}
@@ -371,16 +371,16 @@ export const LiveCallView: React.FC<LiveCallViewProps> = ({
       </div>
 
       {/* 3. OMNIAI REAL-TIME RESPONSE PROMPTER / SUGGESTIONS */}
-      <div className="p-3 bg-[#0f0e1a] border-t border-white/10 max-w-xl mx-auto w-full space-y-2.5">
+      <div className="p-3 bg-[#0a0a0c] border-t border-zinc-800 max-w-xl mx-auto w-full space-y-2.5">
         
         <div className="flex items-center justify-between text-xs font-mono">
-          <span className="text-slate-400 flex items-center gap-1.5 font-bold">
-            <Sparkles className="w-3.5 h-3.5 text-[#00f2fe]" /> 
+          <span className="text-zinc-400 flex items-center gap-1.5 font-bold">
+            <Sparkles className="w-3.5 h-3.5 text-red-500" /> 
             Live Speech Prompter (Tap to Speak in Your Cloned Voice):
           </span>
           <button
             onClick={handleSimulateCallerTurn}
-            className="text-[10px] text-[#00f2fe] hover:underline"
+            className="text-[10px] text-red-400 hover:underline"
           >
             + Next Caller Query
           </button>
@@ -393,15 +393,15 @@ export const LiveCallView: React.FC<LiveCallViewProps> = ({
               key={i}
               onClick={() => handleSpeakAsClone(promptText)}
               disabled={aiSpeaking}
-              className="w-full p-2.5 rounded-xl bg-[#181628] hover:bg-[#25223d] border border-white/10 hover:border-[#00f2fe]/50 text-left text-xs text-slate-200 transition flex items-center justify-between group disabled:opacity-50"
+              className="w-full p-2.5 rounded-xl bg-[#121318] hover:bg-zinc-800 border border-zinc-800 hover:border-red-500/50 text-left text-xs text-zinc-200 transition flex items-center justify-between group disabled:opacity-50"
             >
               <div className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-lg bg-[#6c63ff]/20 text-[#a594fd] font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                <span className="w-5 h-5 rounded-lg bg-red-950/50 text-red-300 font-mono text-[10px] font-bold flex items-center justify-center shrink-0 border border-red-800/40">
                   {i + 1}
                 </span>
                 <span className="group-hover:text-white leading-snug">{promptText}</span>
               </div>
-              <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-[#00f2fe] shrink-0 ml-2" />
+              <ChevronRight className="w-4 h-4 text-zinc-500 group-hover:text-red-400 shrink-0 ml-2" />
             </button>
           ))}
         </div>
@@ -413,7 +413,7 @@ export const LiveCallView: React.FC<LiveCallViewProps> = ({
           <button
             onClick={() => setIsMuted(!isMuted)}
             className={`p-3.5 rounded-full border transition ${
-              isMuted ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' : 'bg-white/5 hover:bg-white/10 text-slate-300 border-white/10'
+              isMuted ? 'bg-red-950/40 text-red-400 border-red-600/40' : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800'
             }`}
             title="Mute Microphone"
           >
@@ -424,7 +424,7 @@ export const LiveCallView: React.FC<LiveCallViewProps> = ({
           <button
             onClick={() => setIsSpeakerOn(!isSpeakerOn)}
             className={`p-3.5 rounded-full border transition ${
-              isSpeakerOn ? 'bg-[#00f2fe]/20 text-[#00f2fe] border-[#00f2fe]/40' : 'bg-white/5 hover:bg-white/10 text-slate-300 border-white/10'
+              isSpeakerOn ? 'bg-red-950/40 text-red-400 border-red-600/40' : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800'
             }`}
             title="Speaker Phone"
           >

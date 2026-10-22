@@ -1,18 +1,26 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { User as SupabaseUser } from '@supabase/supabase-js';
+import { User as FirebaseUser, onAuthStateChanged } from 'firebase/auth';
 import { 
   supabase, 
-  getCurrentUser, 
+  getCurrentUser as getSupabaseUser, 
   getSession, 
-  onAuthStateChange, 
-  listChatThreads, 
-  createChatThread, 
-  renameChatThread, 
-  deleteChatThread, 
-  loadThreadMessages, 
-  saveChatMessage,
+  onAuthStateChange as onSupabaseAuthStateChange, 
+  listChatThreads as listSupabaseThreads, 
+  createChatThread as createSupabaseThread, 
+  renameChatThread as renameSupabaseThread, 
+  deleteChatThread as deleteSupabaseThread, 
+  loadThreadMessages as loadSupabaseMessages, 
+  saveChatMessage as saveSupabaseChatMessage,
   ChatThreadItem 
 } from '../lib/supabase';
+import { 
+  auth as firebaseAuth, 
+  saveFirebaseChatThread, 
+  saveFirebaseChatMessage, 
+  loadFirebaseChatThreads, 
+  loadFirebaseChatMessages 
+} from '../lib/firebase';
 import { omniVoice } from '../lib/omniVoice';
 import { OrbPhase } from '../components/HoloOrb';
 
@@ -44,11 +52,20 @@ export interface StudioContextInfo {
   tag: string;
 }
 
+export interface CloudSyncState {
+  status: 'idle' | 'syncing' | 'synced' | 'error';
+  lastSyncedAt: string | null;
+  provider: 'firebase' | 'supabase' | 'hybrid' | 'local';
+  errorMessage?: string | null;
+}
+
 interface OmniChatContextType {
   messages: ChatMessage[];
   threads: ChatThreadItem[];
   activeThread: ChatThreadItem | null;
   supabaseUser: SupabaseUser | null;
+  firebaseUser: FirebaseUser | null;
+  cloudSyncState: CloudSyncState;
   isGenerating: boolean;
   chatError: string | null;
   failedMessage: { text: string; imageBase64?: string | null; council?: boolean } | null;
@@ -66,6 +83,7 @@ interface OmniChatContextType {
   createNewThread: (title?: string) => Promise<ChatThreadItem | null>;
   renameCurrentThread: (threadId: string, newTitle: string) => Promise<void>;
   deleteCurrentThread: (threadId: string) => Promise<void>;
+  syncAllToCloud: () => Promise<void>;
   clearChatError: () => void;
   setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
 }
@@ -80,11 +98,60 @@ const INITIAL_WELCOME_MESSAGE: ChatMessage = {
   mode: 'normal',
 };
 
+// Local storage key constants for persistent offline and guest sessions
+const LOCAL_THREADS_KEY = 'omni_chat_threads_cache_v2';
+const LOCAL_MSG_PREFIX = 'omni_chat_msgs_cache_';
+
 export const OmniChatProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_WELCOME_MESSAGE]);
-  const [threads, setThreads] = useState<ChatThreadItem[]>([]);
-  const [activeThread, setActiveThread] = useState<ChatThreadItem | null>(null);
+  // Pre-load from cache if available to prevent flash of empty content
+  const [threads, setThreads] = useState<ChatThreadItem[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem(LOCAL_THREADS_KEY);
+        if (cached) return JSON.parse(cached);
+      } catch {}
+    }
+    return [];
+  });
+
+  const [activeThread, setActiveThread] = useState<ChatThreadItem | null>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cached = localStorage.getItem(LOCAL_THREADS_KEY);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed[0];
+        }
+      } catch {}
+    }
+    return null;
+  });
+
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const cachedThreads = localStorage.getItem(LOCAL_THREADS_KEY);
+        if (cachedThreads) {
+          const parsedThreads = JSON.parse(cachedThreads);
+          if (Array.isArray(parsedThreads) && parsedThreads.length > 0) {
+            const firstId = parsedThreads[0].id;
+            const cachedMsgs = localStorage.getItem(`${LOCAL_MSG_PREFIX}${firstId}`);
+            if (cachedMsgs) return JSON.parse(cachedMsgs);
+          }
+        }
+      } catch {}
+    }
+    return [INITIAL_WELCOME_MESSAGE];
+  });
+
   const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | null>(null);
+  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(firebaseAuth.currentUser);
+  const [cloudSyncState, setCloudSyncState] = useState<CloudSyncState>({
+    status: 'idle',
+    lastSyncedAt: null,
+    provider: 'local',
+  });
+
   const [isGenerating, setIsGenerating] = useState(false);
   const [chatError, setChatError] = useState<string | null>(null);
   const [failedMessage, setFailedMessage] = useState<{ text: string; imageBase64?: string | null; council?: boolean } | null>(null);
@@ -92,158 +159,311 @@ export const OmniChatProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [activeStudioContext, setActiveStudioContext] = useState<StudioContextInfo | null>(null);
   const [isCompanionOpen, setIsCompanionOpen] = useState(false);
 
-  // Initialize Supabase Auth & Threads
-  useEffect(() => {
-    getCurrentUser().then((u) => {
-      setSupabaseUser(u);
-      if (u) {
-        refreshThreads(u.id);
+  // Helper to persist in local storage cache
+  const saveToLocalCache = (threadId: string, msgs: ChatMessage[]) => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(`${LOCAL_MSG_PREFIX}${threadId}`, JSON.stringify(msgs));
+      } catch {}
+    }
+  };
+
+  const saveThreadsToLocalCache = (items: ChatThreadItem[]) => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(LOCAL_THREADS_KEY, JSON.stringify(items));
+      } catch {}
+    }
+  };
+
+  // Sync threads and messages with Firebase / Supabase
+  const syncWithRemoteServices = useCallback(async (fUser: FirebaseUser | null, sUser: SupabaseUser | null) => {
+    const activeProvider: 'firebase' | 'supabase' | 'hybrid' | 'local' = 
+      fUser && sUser ? 'hybrid' : fUser ? 'firebase' : sUser ? 'supabase' : 'local';
+
+    setCloudSyncState((prev) => ({ ...prev, status: 'syncing', provider: activeProvider }));
+
+    try {
+      const mergedThreadsMap = new Map<string, ChatThreadItem>();
+
+      // 1. Pull existing local threads
+      threads.forEach((t) => mergedThreadsMap.set(t.id, t));
+
+      // 2. Fetch Firebase Firestore threads
+      if (fUser) {
+        try {
+          const fbThreads = await loadFirebaseChatThreads(fUser.uid);
+          fbThreads.forEach((ft) => {
+            mergedThreadsMap.set(ft.id, {
+              id: ft.id,
+              user_id: ft.userId,
+              title: ft.title,
+              created_at: ft.createdAt,
+              updated_at: ft.updatedAt,
+            });
+          });
+        } catch (fbErr) {
+          console.warn('[CloudSync] Firebase thread pull error:', fbErr);
+        }
       }
+
+      // 3. Fetch Supabase threads
+      if (sUser) {
+        try {
+          const sbThreads = await listSupabaseThreads(sUser.id);
+          sbThreads.forEach((st) => {
+            mergedThreadsMap.set(st.id, st);
+          });
+        } catch (sbErr) {
+          console.warn('[CloudSync] Supabase thread pull error:', sbErr);
+        }
+      }
+
+      const mergedList = Array.from(mergedThreadsMap.values()).sort(
+        (a, b) => new Date(b.updated_at || b.created_at).getTime() - new Date(a.updated_at || a.created_at).getTime()
+      );
+
+      setThreads(mergedList);
+      saveThreadsToLocalCache(mergedList);
+
+      const targetThread = activeThread || (mergedList.length > 0 ? mergedList[0] : null);
+      if (targetThread) {
+        if (!activeThread) setActiveThread(targetThread);
+        
+        // Load messages for target thread
+        let threadMsgs: ChatMessage[] = [];
+
+        // Try Firebase first if authenticated
+        if (fUser) {
+          try {
+            const fbMsgs = await loadFirebaseChatMessages(fUser.uid, targetThread.id);
+            if (fbMsgs.length > 0) {
+              threadMsgs = fbMsgs.map((m) => ({
+                id: m.id,
+                sender: m.sender,
+                text: m.text,
+                timestamp: m.timestamp,
+                mode: (m.mode as any) || 'normal',
+                councilData: m.councilData,
+              }));
+            }
+          } catch {}
+        }
+
+        // Try Supabase if authenticated and empty
+        if (sUser && threadMsgs.length === 0) {
+          try {
+            const sbMsgs = await loadSupabaseMessages(targetThread.id, sUser.id);
+            if (sbMsgs.length > 0) {
+              threadMsgs = sbMsgs.map((r) => {
+                const m = r.message || {};
+                return {
+                  id: r.sdk_id || r.id,
+                  sender: m.sender || (m.role === 'user' ? 'user' : m.mode === 'council' ? 'council' : 'omni'),
+                  text: m.text || m.content || '',
+                  timestamp: r.created_at ? new Date(r.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Earlier',
+                  mode: m.mode || 'normal',
+                  councilData: m.councilData,
+                };
+              });
+            }
+          } catch {}
+        }
+
+        // Fallback to local cache
+        if (threadMsgs.length === 0) {
+          const localCache = localStorage.getItem(`${LOCAL_MSG_PREFIX}${targetThread.id}`);
+          if (localCache) {
+            try { threadMsgs = JSON.parse(localCache); } catch {}
+          }
+        }
+
+        if (threadMsgs.length > 0) {
+          setMessages(threadMsgs);
+          saveToLocalCache(targetThread.id, threadMsgs);
+        }
+      }
+
+      setCloudSyncState({
+        status: 'synced',
+        lastSyncedAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        provider: activeProvider,
+        errorMessage: null,
+      });
+    } catch (err: any) {
+      console.warn('[CloudSync] Unified sync error:', err);
+      setCloudSyncState((prev) => ({
+        ...prev,
+        status: 'error',
+        errorMessage: err?.message || 'Sync failed',
+      }));
+    }
+  }, [threads, activeThread]);
+
+  // Auth subscriptions for both Firebase and Supabase
+  useEffect(() => {
+    // 1. Firebase Auth Listener
+    const unsubFirebase = onAuthStateChanged(firebaseAuth, (u) => {
+      setFirebaseUser(u);
+      syncWithRemoteServices(u, supabaseUser);
     });
 
-    const { data: { subscription } } = onAuthStateChange((u) => {
+    // 2. Supabase Auth Listener
+    getSupabaseUser().then((u) => {
       setSupabaseUser(u);
-      if (u) {
-        refreshThreads(u.id);
-      } else {
-        setThreads([]);
-        setActiveThread(null);
-      }
+      syncWithRemoteServices(firebaseAuth.currentUser, u);
+    });
+
+    const { data: { subscription } } = onSupabaseAuthStateChange((u) => {
+      setSupabaseUser(u);
+      syncWithRemoteServices(firebaseAuth.currentUser, u);
     });
 
     return () => {
+      unsubFirebase();
       subscription.unsubscribe();
     };
   }, []);
 
-  const refreshThreads = async (userId: string) => {
-    try {
-      const list = await listChatThreads(userId);
-      setThreads(list);
-      if (!activeThread && list.length > 0) {
-        setActiveThread(list[0]);
-        loadMessagesForThread(list[0].id, userId);
-      }
-    } catch (err) {
-      console.warn('Could not list threads:', err);
-    }
-  };
-
-  const loadMessagesForThread = async (threadId: string, userId: string) => {
-    try {
-      const records = await loadThreadMessages(threadId, userId);
-      if (records.length > 0) {
-        const mapped: ChatMessage[] = records.map((r) => {
-          const m = r.message || {};
-          return {
-            id: r.sdk_id || r.id,
-            sender: m.sender || (m.role === 'user' ? 'user' : m.mode === 'council' ? 'council' : 'omni'),
-            text: m.text || m.content || '',
-            timestamp: r.created_at ? new Date(r.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Earlier',
-            mode: m.mode || 'normal',
-            councilData: m.councilData,
-          };
-        });
-        setMessages(mapped);
-      } else {
-        setMessages([
-          {
-            id: `welcome-${threadId}`,
-            sender: 'omni',
-            text: "Conversation opened. Ready for your instructions.",
-            timestamp: 'Just now',
-            mode: 'normal',
-          },
-        ]);
-      }
-    } catch (err) {
-      console.warn('Could not load thread messages:', err);
-    }
-  };
-
   const selectThread = async (thread: ChatThreadItem) => {
     setActiveThread(thread);
     setChatError(null);
+
+    // 1. Try local cache instantly
+    const localMsgs = localStorage.getItem(`${LOCAL_MSG_PREFIX}${thread.id}`);
+    if (localMsgs) {
+      try {
+        setMessages(JSON.parse(localMsgs));
+      } catch {}
+    }
+
+    // 2. Fetch from Firebase
+    if (firebaseUser) {
+      try {
+        const fbMsgs = await loadFirebaseChatMessages(firebaseUser.uid, thread.id);
+        if (fbMsgs.length > 0) {
+          const mapped: ChatMessage[] = fbMsgs.map((m) => ({
+            id: m.id,
+            sender: m.sender,
+            text: m.text,
+            timestamp: m.timestamp,
+            mode: (m.mode as any) || 'normal',
+            councilData: m.councilData,
+          }));
+          setMessages(mapped);
+          saveToLocalCache(thread.id, mapped);
+          return;
+        }
+      } catch {}
+    }
+
+    // 3. Fetch from Supabase
     if (supabaseUser) {
-      await loadMessagesForThread(thread.id, supabaseUser.id);
+      try {
+        const records = await loadSupabaseMessages(thread.id, supabaseUser.id);
+        if (records.length > 0) {
+          const mapped: ChatMessage[] = records.map((r) => {
+            const m = r.message || {};
+            return {
+              id: r.sdk_id || r.id,
+              sender: m.sender || (m.role === 'user' ? 'user' : m.mode === 'council' ? 'council' : 'omni'),
+              text: m.text || m.content || '',
+              timestamp: r.created_at ? new Date(r.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Earlier',
+              mode: m.mode || 'normal',
+              councilData: m.councilData,
+            };
+          });
+          setMessages(mapped);
+          saveToLocalCache(thread.id, mapped);
+        }
+      } catch {}
     }
   };
 
   const createNewThread = async (title = 'New conversation'): Promise<ChatThreadItem | null> => {
-    if (!supabaseUser) {
-      // Local guest thread
-      const guestThread: ChatThreadItem = {
-        id: crypto.randomUUID(),
-        user_id: 'guest',
-        title: title || 'New conversation',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-      setActiveThread(guestThread);
-      setMessages([INITIAL_WELCOME_MESSAGE]);
-      return guestThread;
+    const threadId = crypto.randomUUID();
+    const newThread: ChatThreadItem = {
+      id: threadId,
+      user_id: firebaseUser?.uid || supabaseUser?.id || 'guest',
+      title: title || 'New conversation',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    setThreads((prev) => [newThread, ...prev]);
+    saveThreadsToLocalCache([newThread, ...threads]);
+    setActiveThread(newThread);
+
+    const welcomeMsg: ChatMessage = {
+      id: `welcome-${newThread.id}`,
+      sender: 'omni',
+      text: "New conversation initiated. OmniAI is ready.",
+      timestamp: 'Just now',
+      mode: 'normal',
+    };
+    setMessages([welcomeMsg]);
+    saveToLocalCache(threadId, [welcomeMsg]);
+
+    // Async sync to Firebase
+    if (firebaseUser) {
+      saveFirebaseChatThread(firebaseUser.uid, newThread).catch(console.warn);
+      saveFirebaseChatMessage(firebaseUser.uid, threadId, welcomeMsg).catch(console.warn);
     }
 
-    try {
-      const created = await createChatThread(supabaseUser.id, title);
-      setThreads((prev) => [created, ...prev]);
-      setActiveThread(created);
-      setMessages([
-        {
-          id: `welcome-${created.id}`,
-          sender: 'omni',
-          text: `New conversation started. I am OmniAI, ready to assist.`,
-          timestamp: 'Just now',
-          mode: 'normal',
-        },
-      ]);
-      return created;
-    } catch (err: any) {
-      setChatError(`Could not create conversation: ${err?.message || err}`);
-      return null;
+    // Async sync to Supabase
+    if (supabaseUser) {
+      createSupabaseThread(supabaseUser.id, title).catch(console.warn);
     }
+
+    return newThread;
   };
 
   const renameCurrentThread = async (threadId: string, newTitle: string) => {
-    if (!supabaseUser) {
-      if (activeThread?.id === threadId) {
-        setActiveThread((prev) => prev ? { ...prev, title: newTitle } : null);
-      }
-      return;
-    }
-    await renameChatThread(threadId, supabaseUser.id, newTitle);
-    setThreads((prev) =>
-      prev.map((t) => (t.id === threadId ? { ...t, title: newTitle } : t))
-    );
+    setThreads((prev) => {
+      const updated = prev.map((t) => (t.id === threadId ? { ...t, title: newTitle, updated_at: new Date().toISOString() } : t));
+      saveThreadsToLocalCache(updated);
+      return updated;
+    });
+
     if (activeThread?.id === threadId) {
       setActiveThread((prev) => prev ? { ...prev, title: newTitle } : null);
+    }
+
+    if (firebaseUser) {
+      saveFirebaseChatThread(firebaseUser.uid, { id: threadId, title: newTitle, updatedAt: new Date().toISOString() }).catch(console.warn);
+    }
+
+    if (supabaseUser) {
+      renameSupabaseThread(threadId, supabaseUser.id, newTitle).catch(console.warn);
     }
   };
 
   const deleteCurrentThread = async (threadId: string) => {
-    if (!supabaseUser) {
-      if (activeThread?.id === threadId) {
-        setActiveThread(null);
-        setMessages([INITIAL_WELCOME_MESSAGE]);
-      }
-      return;
-    }
-    await deleteChatThread(threadId, supabaseUser.id);
-    setThreads((prev) => prev.filter((t) => t.id !== threadId));
+    const remaining = threads.filter((t) => t.id !== threadId);
+    setThreads(remaining);
+    saveThreadsToLocalCache(remaining);
+    localStorage.removeItem(`${LOCAL_MSG_PREFIX}${threadId}`);
+
     if (activeThread?.id === threadId) {
-      const remaining = threads.filter((t) => t.id !== threadId);
       if (remaining.length > 0) {
-        setActiveThread(remaining[0]);
-        loadMessagesForThread(remaining[0].id, supabaseUser.id);
+        selectThread(remaining[0]);
       } else {
         setActiveThread(null);
         setMessages([INITIAL_WELCOME_MESSAGE]);
       }
+    }
+
+    if (supabaseUser) {
+      deleteSupabaseThread(threadId, supabaseUser.id).catch(console.warn);
     }
   };
 
   const clearChatError = () => {
     setChatError(null);
+  };
+
+  const syncAllToCloud = async () => {
+    await syncWithRemoteServices(firebaseUser, supabaseUser);
   };
 
   const sendMessage = useCallback(
@@ -257,21 +477,29 @@ export const OmniChatProvider: React.FC<{ children: ReactNode }> = ({ children }
       setChatError(null);
       setFailedMessage(null);
 
-      // Determine active thread ID (must be a valid UUID for Supabase)
+      // Determine active thread ID
       let currentThreadId = activeThread?.id;
       if (!currentThreadId) {
         currentThreadId = crypto.randomUUID();
         const placeholderThread: ChatThreadItem = {
           id: currentThreadId,
-          user_id: supabaseUser?.id || 'guest',
+          user_id: firebaseUser?.uid || supabaseUser?.id || 'guest',
           title: cleanPrompt.slice(0, 40) || 'New conversation',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         };
         setActiveThread(placeholderThread);
-        setThreads((prev) => [placeholderThread, ...prev]);
+        setThreads((prev) => {
+          const updated = [placeholderThread, ...prev];
+          saveThreadsToLocalCache(updated);
+          return updated;
+        });
+
+        if (firebaseUser) {
+          saveFirebaseChatThread(firebaseUser.uid, placeholderThread).catch(console.warn);
+        }
         if (supabaseUser) {
-          createChatThread(supabaseUser.id, cleanPrompt.slice(0, 40)).catch(console.warn);
+          createSupabaseThread(supabaseUser.id, cleanPrompt.slice(0, 40)).catch(console.warn);
         }
       }
 
@@ -285,14 +513,26 @@ export const OmniChatProvider: React.FC<{ children: ReactNode }> = ({ children }
         mode: options?.council ? 'council' : 'normal',
       };
 
-      setMessages((prev) => [...prev, userMsg]);
+      setMessages((prev) => {
+        const next = [...prev, userMsg];
+        saveToLocalCache(currentThreadId, next);
+        return next;
+      });
+
       setIsGenerating(true);
       setOrbPhase('processing');
 
-      // Save user message to Supabase if authenticated
+      // Sync user message to Firebase
+      if (firebaseUser) {
+        saveFirebaseChatMessage(firebaseUser.uid, currentThreadId, userMsg).catch((err) => {
+          console.warn('[Firebase CloudSync] User message save error:', err);
+        });
+      }
+
+      // Sync user message to Supabase
       if (supabaseUser) {
-        saveChatMessage(currentThreadId, supabaseUser.id, userMsgId, userMsg).catch((err) => {
-          console.warn('Could not persist user message:', err);
+        saveSupabaseChatMessage(currentThreadId, supabaseUser.id, userMsgId, userMsg).catch((err) => {
+          console.warn('[Supabase CloudSync] User message save error:', err);
         });
       }
 
@@ -307,7 +547,6 @@ export const OmniChatProvider: React.FC<{ children: ReactNode }> = ({ children }
           headers['Authorization'] = `Bearer ${authToken}`;
         }
 
-        // Format according to AI SDK UI-message contract
         const formattedMessages = [
           ...messages.map((m) => ({
             id: m.id,
@@ -369,20 +608,37 @@ export const OmniChatProvider: React.FC<{ children: ReactNode }> = ({ children }
           councilData: data.councilData,
         };
 
-        setMessages((prev) => [...prev, botMsg]);
+        setMessages((prev) => {
+          const next = [...prev, botMsg];
+          saveToLocalCache(currentThreadId, next);
+          return next;
+        });
         setOrbPhase('talking');
 
-        // Speak aloud with user's selected browser voice
+        // Speak aloud with voice engine
         if (omniVoice.getVoiceEnabled() && replyText) {
           omniVoice.speak(replyText);
         }
 
-        // Persist reply to Supabase if authenticated
-        if (supabaseUser) {
-          saveChatMessage(currentThreadId, supabaseUser.id, botMsgId, botMsg).catch((err) => {
-            console.warn('Could not persist reply:', err);
+        // Sync assistant reply to Firebase
+        if (firebaseUser) {
+          saveFirebaseChatMessage(firebaseUser.uid, currentThreadId, botMsg).catch((err) => {
+            console.warn('[Firebase CloudSync] Assistant reply save error:', err);
           });
         }
+
+        // Sync assistant reply to Supabase
+        if (supabaseUser) {
+          saveSupabaseChatMessage(currentThreadId, supabaseUser.id, botMsgId, botMsg).catch((err) => {
+            console.warn('[Supabase CloudSync] Assistant reply save error:', err);
+          });
+        }
+
+        setCloudSyncState((prev) => ({
+          ...prev,
+          status: 'synced',
+          lastSyncedAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        }));
 
         setTimeout(() => {
           setOrbPhase('idle');
@@ -403,7 +659,7 @@ export const OmniChatProvider: React.FC<{ children: ReactNode }> = ({ children }
         setIsGenerating(false);
       }
     },
-    [messages, activeThread, supabaseUser, activeStudioContext]
+    [messages, activeThread, firebaseUser, supabaseUser, activeStudioContext]
   );
 
   const retryLastMessage = async () => {
@@ -419,6 +675,8 @@ export const OmniChatProvider: React.FC<{ children: ReactNode }> = ({ children }
         threads,
         activeThread,
         supabaseUser,
+        firebaseUser,
+        cloudSyncState,
         isGenerating,
         chatError,
         failedMessage,
@@ -433,6 +691,7 @@ export const OmniChatProvider: React.FC<{ children: ReactNode }> = ({ children }
         createNewThread,
         renameCurrentThread,
         deleteCurrentThread,
+        syncAllToCloud,
         clearChatError,
         setMessages,
       }}

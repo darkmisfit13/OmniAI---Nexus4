@@ -151,27 +151,27 @@ export const OmniCompanionPanel: React.FC<OmniCompanionPanelProps> = ({
         animate={{ y: 0 }}
         exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-        className="relative w-full max-w-lg mx-auto bg-[#0a0d18] border-t sm:border border-cyan-500/40 rounded-t-[28px] sm:rounded-2xl shadow-[0_-10px_40px_rgba(0,242,254,0.25)] flex flex-col h-[78vh] sm:h-[680px] max-h-[85vh] z-10 overflow-hidden"
+        className="relative w-full max-w-lg mx-auto bg-[#0a0a0c] border-t sm:border border-zinc-800 rounded-t-[28px] sm:rounded-2xl shadow-[0_-10px_40px_rgba(220,38,38,0.2)] flex flex-col h-[78vh] sm:h-[680px] max-h-[85vh] z-10 overflow-hidden"
       >
         {/* Top Drag Indicator / Handle */}
-        <div className="w-full flex justify-center pt-2 pb-1 bg-[#070912]">
-          <div className="w-12 h-1 rounded-full bg-slate-700" />
+        <div className="w-full flex justify-center pt-2 pb-1 bg-[#0a0a0c]">
+          <div className="w-12 h-1 rounded-full bg-zinc-800" />
         </div>
 
         {/* Panel Header */}
-        <div className="px-3.5 py-2.5 bg-[#070912] border-b border-slate-800 flex items-center justify-between shrink-0">
+        <div className="px-3.5 py-2.5 bg-[#0a0a0c] border-b border-zinc-800 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2 min-w-0">
-            <div className="w-2 h-2 rounded-full bg-[#00f2fe] animate-pulse shadow-[0_0_8px_#00f2fe] shrink-0" />
+            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(220,38,38,0.8)] shrink-0" />
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <span className="font-bold text-xs text-white truncate">OmniAI Companion</span>
                 {currentStudioName && (
-                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/40 font-mono truncate">
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-red-950/60 text-red-300 border border-red-800/40 font-mono truncate">
                     {currentStudioName}
                   </span>
                 )}
               </div>
-              <p className="text-[10px] text-slate-400 font-mono truncate">
+              <p className="text-[10px] text-zinc-400 font-mono truncate">
                 {activeThread?.title || 'Live Creative Partner'}
               </p>
             </div>
@@ -187,12 +187,12 @@ export const OmniCompanionPanel: React.FC<OmniCompanionPanelProps> = ({
               }}
               className={`p-1.5 rounded-lg border text-xs transition ${
                 isVoiceEnabled
-                  ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50 shadow-[0_0_8px_rgba(0,242,254,0.3)]'
-                  : 'bg-slate-900 text-slate-500 border-slate-800'
+                  ? 'bg-red-950/40 text-red-300 border-red-600/40 shadow-[0_0_8px_rgba(220,38,38,0.25)]'
+                  : 'bg-zinc-900 text-zinc-500 border-zinc-800'
               }`}
               title={isVoiceEnabled ? 'Voice output enabled' : 'Voice output muted'}
             >
-              {isVoiceEnabled ? <Volume2 className="w-3.5 h-3.5 text-cyan-400" /> : <VolumeX className="w-3.5 h-3.5" />}
+              {isVoiceEnabled ? <Volume2 className="w-3.5 h-3.5 text-red-400" /> : <VolumeX className="w-3.5 h-3.5 text-zinc-500" />}
             </button>
 
             {/* Expand to Full Dedicated Chat Page */}
@@ -202,17 +202,17 @@ export const OmniCompanionPanel: React.FC<OmniCompanionPanelProps> = ({
                 onClose();
                 onOpenFullChat();
               }}
-              className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-cyan-500/40 text-xs transition flex items-center gap-1"
+              className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:border-red-500/40 text-xs transition flex items-center gap-1"
               title="Open full dedicated chat page"
             >
-              <Maximize2 className="w-3.5 h-3.5 text-cyan-400" />
+              <Maximize2 className="w-3.5 h-3.5 text-red-400" />
             </button>
 
             {/* Close Button: returns to exact studio and screen */}
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 transition"
+              className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
               title="Close Companion"
             >
               <X className="w-4 h-4" />
@@ -221,19 +221,19 @@ export const OmniCompanionPanel: React.FC<OmniCompanionPanelProps> = ({
         </div>
 
         {/* HoloOrb Visual Section - Sized nicely to see clearly */}
-        <div className="px-4 py-2 bg-gradient-to-b from-[#070912] to-[#0a0d18] border-b border-slate-800/60 flex items-center justify-between shrink-0">
+        <div className="px-4 py-2 bg-[#121318] border-b border-zinc-800 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-black/80 border border-cyan-500/40 flex items-center justify-center shrink-0 shadow-inner overflow-hidden">
+            <div className="w-12 h-12 rounded-2xl bg-black border border-zinc-800 flex items-center justify-center shrink-0 shadow-inner overflow-hidden">
               <HoloOrb phase={orbPhase} size="sm" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="text-xs font-bold text-slate-200">HoloOrb Synchronized</span>
-                <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-500/30 font-mono">
+                <span className="text-xs font-bold text-zinc-200">HoloOrb Synchronized</span>
+                <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-red-950/60 text-red-400 border border-red-800/40 font-mono">
                   {orbPhase.toUpperCase()}
                 </span>
               </div>
-              <p className="text-[10px] text-slate-400">
+              <p className="text-[10px] text-zinc-400">
                 Observing {studioLabel}. Directing next moves with zero disruption.
               </p>
             </div>
@@ -241,14 +241,14 @@ export const OmniCompanionPanel: React.FC<OmniCompanionPanelProps> = ({
         </div>
 
         {/* Studio Quick Context Chips */}
-        <div className="px-3 py-1.5 bg-[#090b16] border-b border-slate-800/80 flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
-          <span className="text-[9.5px] font-mono text-cyan-400 font-bold shrink-0">Prompt:</span>
+        <div className="px-3 py-1.5 bg-[#0a0a0c] border-b border-zinc-800 flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
+          <span className="text-[9.5px] font-mono text-red-400 font-bold shrink-0">Prompt:</span>
           {studioChips.map((chip, idx) => (
             <button
               key={idx}
               type="button"
               onClick={() => handleQuickChip(chip)}
-              className="px-2.5 py-1 rounded-full bg-slate-900/90 border border-slate-700/80 hover:border-cyan-400 text-slate-300 hover:text-white text-[10px] font-mono whitespace-nowrap transition active:scale-95 shrink-0"
+              className="px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 hover:border-red-500/40 text-zinc-300 hover:text-white text-[10px] font-mono whitespace-nowrap transition active:scale-95 shrink-0"
             >
               {chip}
             </button>
@@ -264,7 +264,7 @@ export const OmniCompanionPanel: React.FC<OmniCompanionPanelProps> = ({
                 key={msg.id}
                 className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}
               >
-                <div className="flex items-center gap-1 mb-0.5 px-1 text-[9px] font-mono text-slate-500">
+                <div className="flex items-center gap-1 mb-0.5 px-1 text-[9px] font-mono text-zinc-500">
                   <span>{isUser ? 'You' : 'OmniAI'}</span>
                   <span>•</span>
                   <span>{msg.timestamp}</span>
@@ -273,8 +273,8 @@ export const OmniCompanionPanel: React.FC<OmniCompanionPanelProps> = ({
                 <div
                   className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
                     isUser
-                      ? 'bg-gradient-to-r from-cyan-600 to-indigo-600 text-white rounded-br-xs shadow-md shadow-cyan-950/40'
-                      : 'bg-[#101424] text-slate-200 border border-slate-800 rounded-bl-xs shadow-sm'
+                      ? 'bg-gradient-to-r from-red-600 to-red-700 text-white rounded-br-xs shadow-md shadow-red-950/40'
+                      : 'bg-[#121318] text-zinc-200 border border-zinc-800 rounded-bl-xs shadow-sm'
                   }`}
                 >
                   <p className="whitespace-pre-wrap">{msg.text}</p>
@@ -286,10 +286,10 @@ export const OmniCompanionPanel: React.FC<OmniCompanionPanelProps> = ({
           {/* Generating Loading State */}
           {isGenerating && (
             <div className="flex items-start gap-2">
-              <div className="w-5 h-5 rounded-lg bg-cyan-950 border border-cyan-500/40 flex items-center justify-center shrink-0">
+              <div className="w-5 h-5 rounded-lg bg-red-950 border border-red-600/40 flex items-center justify-center shrink-0">
                 <HoloOrb phase="processing" size="xs" />
               </div>
-              <div className="px-3 py-2 rounded-2xl bg-[#101424] border border-cyan-500/30 text-cyan-300 text-xs font-mono flex items-center gap-2 animate-pulse">
+              <div className="px-3 py-2 rounded-2xl bg-[#121318] border border-red-600/30 text-red-300 text-xs font-mono flex items-center gap-2 animate-pulse">
                 <span>OmniAI is thinking...</span>
               </div>
             </div>
@@ -297,9 +297,9 @@ export const OmniCompanionPanel: React.FC<OmniCompanionPanelProps> = ({
 
           {/* Error Banner with Retry */}
           {chatError && (
-            <div className="p-3 rounded-xl bg-rose-950/70 border border-rose-500/50 text-rose-300 text-xs space-y-2">
+            <div className="p-3 rounded-xl bg-red-950/80 border border-red-500/50 text-red-200 text-xs space-y-2">
               <div className="flex items-center gap-1.5 font-bold">
-                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
                 <span>Error communicating with OmniAI:</span>
               </div>
               <p className="text-[11px] font-mono leading-relaxed">{chatError}</p>
@@ -307,7 +307,7 @@ export const OmniCompanionPanel: React.FC<OmniCompanionPanelProps> = ({
                 <button
                   type="button"
                   onClick={retryLastMessage}
-                  className="px-3 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/50 text-rose-200 text-xs font-mono font-bold flex items-center gap-1 transition"
+                  className="px-3 py-1 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-mono font-bold flex items-center gap-1 transition"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Retry Message</span>
@@ -322,7 +322,7 @@ export const OmniCompanionPanel: React.FC<OmniCompanionPanelProps> = ({
         {/* Compact Bottom Message Input Bar */}
         <form
           onSubmit={handleSend}
-          className="p-2.5 bg-[#070912] border-t border-slate-800 flex items-center gap-2 shrink-0 pb-[max(0.6rem,env(safe-area-inset-bottom))]"
+          className="p-2.5 bg-[#0a0a0c] border-t border-zinc-800 flex items-center gap-2 shrink-0 pb-[max(0.6rem,env(safe-area-inset-bottom))]"
         >
           {/* Dictate Button */}
           <button
@@ -330,8 +330,8 @@ export const OmniCompanionPanel: React.FC<OmniCompanionPanelProps> = ({
             onClick={handleToggleDictation}
             className={`p-2 rounded-xl border transition ${
               isDictating
-                ? 'bg-rose-500/20 text-rose-400 border-rose-500 animate-pulse'
-                : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
+                ? 'bg-red-600/20 text-red-400 border-red-500 animate-pulse'
+                : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'
             }`}
             title="Voice dictation"
           >
@@ -344,7 +344,7 @@ export const OmniCompanionPanel: React.FC<OmniCompanionPanelProps> = ({
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder={`Ask OmniAI about ${studioLabel}...`}
-            className="flex-1 bg-slate-900/90 border border-slate-800 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/40 transition font-sans"
+            className="flex-1 bg-zinc-900 border border-zinc-800 focus:border-red-500 rounded-xl px-3 py-2 text-xs text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-red-500/40 transition font-sans"
             disabled={isGenerating}
           />
 
@@ -352,7 +352,7 @@ export const OmniCompanionPanel: React.FC<OmniCompanionPanelProps> = ({
           <button
             type="submit"
             disabled={!inputText.trim() || isGenerating}
-            className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 disabled:opacity-40 text-slate-950 font-bold text-xs flex items-center gap-1 shadow-md shadow-cyan-500/20 active:scale-95 transition"
+            className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:brightness-110 disabled:opacity-40 text-white font-bold text-xs flex items-center gap-1 shadow-md shadow-red-600/20 active:scale-95 transition"
           >
             <Send className="w-3.5 h-3.5" />
             <span className="hidden xs:inline">Send</span>

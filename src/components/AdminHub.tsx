@@ -729,19 +729,19 @@ export const AdminHub: React.FC<AdminHubProps> = ({ onClose }) => {
     <div className="h-full flex flex-col bg-[#07090f] text-slate-100 overflow-hidden font-sans">
       
       {/* Top Header Bar */}
-      <div className="h-14 px-4 bg-[#0a0d17] border-b border-slate-800 flex items-center justify-between flex-shrink-0">
+      <div className="h-14 px-4 bg-[#0a0a0c] border-b border-zinc-800 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-gradient-to-br from-[#00f2fe]/20 to-[#7f00ff]/30 border border-[#00f2fe]/40 text-[#00f2fe]">
+          <div className="p-2 rounded-xl bg-red-950/40 border border-red-600/40 text-red-400">
             <Settings className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="font-bold text-sm text-white">Omni Settings & Admin Hub</span>
-              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">
+              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-red-950/60 text-red-400 border border-red-800">
                 System Governance
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-mono">
+            <p className="text-[11px] text-zinc-400 font-mono">
               Signed in as: darkmisfit.ai@gmail.com • DarkMisfitStudios HQ
             </p>
           </div>
@@ -762,7 +762,7 @@ export const AdminHub: React.FC<AdminHubProps> = ({ onClose }) => {
               triggerHaptic(10);
               onClose();
             }}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
             title="Close Settings"
           >
             <X className="w-4 h-4" />
@@ -791,32 +791,32 @@ export const AdminHub: React.FC<AdminHubProps> = ({ onClose }) => {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
                     <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-[#00f2fe]" />
+                      <Sparkles className="w-4 h-4 text-red-400" />
                       <span>System Preferences & Modules</span>
                     </h2>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-zinc-400">
                       Select an option below to enter its dedicated settings console. Each button provides full tactile confirmation.
                     </p>
                   </div>
-                  <span className="text-[11px] font-mono text-cyan-300/80 bg-cyan-950/40 px-2.5 py-1 rounded-lg border border-cyan-500/30 self-start sm:self-auto">
+                  <span className="text-[11px] font-mono text-red-300 bg-red-950/40 px-2.5 py-1 rounded-lg border border-red-600/40 self-start sm:self-auto">
                     {filteredOptions.length} of {settingsOptions.length} Options Available
                   </span>
                 </div>
 
                 {/* Search Bar for Quick Instant Access */}
                 <div className="relative">
-                  <Search className="w-4 h-4 text-[#00f2fe] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <Search className="w-4 h-4 text-red-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search settings, LLMs, API keys, haptics, cloud sync, billing..."
-                    className="w-full bg-[#0B0B0C] border border-white/15 focus:border-[#00f2fe] rounded-xl pl-10 pr-9 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-[#00f2fe]/40 transition shadow-inner font-mono"
+                    className="w-full bg-[#121318] border border-zinc-800 focus:border-red-500 rounded-xl pl-10 pr-9 py-2.5 text-xs text-white placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-red-500/40 transition shadow-inner font-mono"
                   />
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-white"
                       title="Clear search"
                     >
                       <X className="w-3.5 h-3.5" />
@@ -826,8 +826,8 @@ export const AdminHub: React.FC<AdminHubProps> = ({ onClose }) => {
 
                 {/* Filter Categories System */}
                 <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
-                  <div className="flex items-center gap-1 text-[10px] font-mono text-slate-500 shrink-0 pr-1">
-                    <Filter className="w-3 h-3 text-[#00f2fe]" />
+                  <div className="flex items-center gap-1 text-[10px] font-mono text-zinc-500 shrink-0 pr-1">
+                    <Filter className="w-3 h-3 text-red-400" />
                     <span>Filter:</span>
                   </div>
                   {categories.map((cat) => {
@@ -841,12 +841,12 @@ export const AdminHub: React.FC<AdminHubProps> = ({ onClose }) => {
                         }}
                         className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all shrink-0 flex items-center gap-1.5 ${
                           isSelected
-                            ? 'bg-gradient-to-r from-[#00f2fe]/20 to-[#7f00ff]/30 text-[#00f2fe] border border-[#00f2fe] shadow-[0_0_12px_rgba(0,242,254,0.3)] font-bold'
-                            : 'bg-[#0B0B0C] text-slate-400 border border-white/10 hover:text-white hover:border-white/20'
+                            ? 'bg-red-950/60 text-red-400 border border-red-600 shadow-[0_0_12px_rgba(220,38,38,0.3)] font-bold'
+                            : 'bg-[#121318] text-zinc-400 border border-zinc-800 hover:text-white hover:border-zinc-700'
                         }`}
                       >
                         <span>{cat.label}</span>
-                        <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-[#00f2fe]/30 text-white' : 'bg-white/5 text-slate-500'}`}>
+                        <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-red-600 text-white' : 'bg-white/5 text-zinc-500'}`}>
                           {cat.count}
                         </span>
                       </button>
@@ -959,14 +959,14 @@ export const AdminHub: React.FC<AdminHubProps> = ({ onClose }) => {
                         }}
                         whileHover={{ scale: 1.01 }}
                         whileTap={{ scale: 0.98, y: 3 }}
-                        className="keycap-3d group text-left p-4 sm:p-5 rounded-2xl flex flex-col justify-between relative overflow-hidden transition-all duration-150 border border-white/10 hover:border-[#00f2fe] hover:shadow-[0_4px_0_0_#050506,0_0_20px_rgba(0,242,254,0.3)] active:translate-y-1.5 active:shadow-[0_1px_0_0_#050506,0_0_15px_rgba(127,0,255,0.6)] cursor-pointer"
+                        className="keycap-3d group text-left p-4 sm:p-5 rounded-2xl flex flex-col justify-between relative overflow-hidden transition-all duration-150 border border-zinc-800 hover:border-red-600 hover:shadow-[0_4px_0_0_#050506,0_0_20px_rgba(220,38,38,0.3)] active:translate-y-1.5 active:shadow-[0_1px_0_0_#050506,0_0_15px_rgba(220,38,38,0.6)] cursor-pointer bg-[#121318]"
                       >
                         {/* Top row: Icon + Category Badge */}
                         <div className="flex items-start justify-between mb-3 w-full">
-                          <div className="p-3 rounded-xl bg-gradient-to-br from-[#00f2fe]/15 to-[#7f00ff]/20 border border-[#00f2fe]/40 text-[#00f2fe] group-hover:scale-105 group-hover:border-[#00f2fe] transition-transform shadow-inner">
-                            <Icon className="w-5 h-5 text-[#00f2fe]" />
+                          <div className="p-3 rounded-xl bg-red-950/40 border border-red-600/40 text-red-400 group-hover:scale-105 group-hover:border-red-500 transition-transform shadow-inner">
+                            <Icon className="w-5 h-5 text-red-400" />
                           </div>
-                          <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-slate-400">
+                          <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/5 border border-zinc-800 text-zinc-400">
                             {item.categoryLabel}
                           </span>
                         </div>
@@ -974,29 +974,29 @@ export const AdminHub: React.FC<AdminHubProps> = ({ onClose }) => {
                         {/* Title & Description */}
                         <div className="space-y-1.5 w-full">
                           <div className="flex items-center justify-between w-full">
-                            <h3 className="font-bold text-white text-sm sm:text-base group-hover:text-[#00f2fe] transition-colors flex items-center gap-1.5">
+                            <h3 className="font-bold text-white text-sm sm:text-base group-hover:text-red-400 transition-colors flex items-center gap-1.5">
                               <span>{item.title}</span>
                             </h3>
-                            <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-[#00f2fe] group-hover:translate-x-1 transition-all" />
+                            <ChevronRight className="w-4 h-4 text-zinc-500 group-hover:text-red-400 group-hover:translate-x-1 transition-all" />
                           </div>
-                          <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">
+                          <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
                             {item.description}
                           </p>
                         </div>
 
                         {/* Bottom Highlight accent bar */}
-                        <div className="mt-3.5 pt-2.5 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-slate-400 w-full">
+                        <div className="mt-3.5 pt-2.5 border-t border-zinc-800/60 flex items-center justify-between text-[11px] font-mono text-zinc-400 w-full">
                           <span className="flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#00f2fe] animate-pulse" />
-                            <span className="text-slate-300">{item.statusBadge}</span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                            <span className="text-zinc-300">{item.statusBadge}</span>
                           </span>
-                          <span className="text-[#00f2fe] group-hover:underline text-[10px] font-bold">
+                          <span className="text-red-400 group-hover:underline text-[10px] font-bold">
                             Configure →
                           </span>
                         </div>
 
                         {/* Holographic Glowing 3D edge line */}
-                        <div className="absolute inset-x-6 bottom-0.5 h-[2px] bg-gradient-to-r from-transparent via-[#00f2fe]/40 to-transparent group-hover:via-[#00f2fe]/80 transition-all" />
+                        <div className="absolute inset-x-6 bottom-0.5 h-[2px] bg-gradient-to-r from-transparent via-red-600/40 to-transparent group-hover:via-red-500/80 transition-all" />
                       </motion.button>
                     );
                   })
@@ -1018,7 +1018,7 @@ export const AdminHub: React.FC<AdminHubProps> = ({ onClose }) => {
               className="p-4 sm:p-6 max-w-5xl mx-auto space-y-5"
             >
               {/* Back Button & Sub-Menu Breadcrumb Banner */}
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800 gap-3">
+              <div className="flex items-center justify-between pb-3 border-b border-zinc-800 gap-3">
                 <div className="flex items-center gap-3">
                   <motion.button
                     onClick={() => {
@@ -1027,22 +1027,22 @@ export const AdminHub: React.FC<AdminHubProps> = ({ onClose }) => {
                     }}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.96, y: 1.5 }}
-                    className="keycap-3d px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold text-slate-200 hover:text-white flex items-center gap-2 border border-white/10 hover:border-[#00f2fe] shadow-sm transition active:translate-y-1"
+                    className="keycap-3d px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold text-zinc-200 hover:text-white flex items-center gap-2 border border-zinc-800 hover:border-red-600 shadow-sm transition active:translate-y-1 bg-[#121318]"
                     title="Return to Settings Landing"
                   >
-                    <ArrowLeft className="w-4 h-4 text-[#00f2fe]" />
+                    <ArrowLeft className="w-4 h-4 text-red-400" />
                     <span>Back to Settings</span>
                   </motion.button>
 
-                  <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400 font-mono">
+                  <div className="hidden sm:flex items-center gap-1.5 text-xs text-zinc-400 font-mono">
                     <span>Settings</span>
                     <span>/</span>
-                    <span className="text-[#00f2fe] font-bold">{currentOptionMeta?.title}</span>
+                    <span className="text-red-400 font-bold">{currentOptionMeta?.title}</span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono uppercase tracking-wider px-2.5 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-cyan-300">
+                  <span className="text-[10px] font-mono uppercase tracking-wider px-2.5 py-1 rounded-full bg-red-950/60 border border-red-600/40 text-red-300">
                     {currentOptionMeta?.categoryLabel}
                   </span>
                 </div>
@@ -1051,7 +1051,7 @@ export const AdminHub: React.FC<AdminHubProps> = ({ onClose }) => {
               {/* Sub-Menu Title Header */}
               <div className="space-y-1">
                 <h1 className="text-lg font-bold text-white flex items-center gap-2">
-                  {currentOptionMeta && <currentOptionMeta.icon className="w-5 h-5 text-[#00f2fe]" />}
+                  {currentOptionMeta && <currentOptionMeta.icon className="w-5 h-5 text-red-400" />}
                   <span>{currentOptionMeta?.title}</span>
                 </h1>
                 <p className="text-xs text-slate-400">
@@ -1568,7 +1568,7 @@ export const AdminHub: React.FC<AdminHubProps> = ({ onClose }) => {
                         type="button"
                         onClick={handleRunAICalibration}
                         disabled={isCalibratingAI || clonedProfile.samples.length === 0}
-                        className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#00f2fe] via-cyan-400 to-indigo-500 hover:brightness-110 text-slate-950 font-bold text-xs font-mono flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/25 active:scale-95 transition disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
+                        className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 shadow-lg shadow-red-950/40 active:scale-95 transition disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
                       >
                         <Wand2 className={`w-3.5 h-3.5 ${isCalibratingAI ? 'animate-spin' : ''}`} />
                         <span>{isCalibratingAI ? 'Synthesizing Neural Persona...' : 'Calibrate OmniVoice Persona'}</span>
@@ -1796,13 +1796,13 @@ export const AdminHub: React.FC<AdminHubProps> = ({ onClose }) => {
               {selectedSubPage === 'llms' && (
                 <div className="space-y-4">
                   {/* Architecture Clarification Hero Card */}
-                  <div className="p-4 bg-gradient-to-r from-cyan-950/40 via-purple-950/30 to-indigo-950/40 border border-cyan-500/40 rounded-2xl text-xs space-y-2">
+                  <div className="p-4 bg-[#121318] border border-red-600/40 rounded-2xl text-xs space-y-2">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-cyan-300 font-bold">
-                        <Sparkles className="w-4 h-4 text-[#00f2fe]" />
+                      <div className="flex items-center gap-2 text-red-400 font-bold">
+                        <Sparkles className="w-4 h-4 text-red-400" />
                         <span>Omni AI Unified Multi-LLM Cascade & Auto-Failover</span>
                       </div>
-                      <span className="px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-700 text-[10px] font-mono">
+                      <span className="px-2 py-0.5 rounded-full bg-red-950/60 text-red-400 border border-red-800 text-[10px] font-mono">
                         Auto-Failover Active
                       </span>
                     </div>

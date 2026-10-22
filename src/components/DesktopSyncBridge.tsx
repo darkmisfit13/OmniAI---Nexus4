@@ -234,40 +234,40 @@ fn main() {
 }`;
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto p-4 space-y-4 text-slate-100 bg-[#000000] font-mono">
+    <div className="flex flex-col h-full overflow-y-auto p-4 space-y-4 text-zinc-100 bg-black font-mono">
       {/* 1. BRANDING & LAPTOP SYNC HEADER */}
-      <div className="p-4 rounded-2xl bg-[#0B0B0C] border border-[#00f2fe]/40 shadow-[0_0_30px_rgba(0,242,254,0.2)] space-y-3">
+      <div className="p-4 rounded-2xl bg-[#0a0a0c] border border-red-600/30 shadow-[0_0_20px_rgba(220,38,38,0.15)] space-y-3">
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-base font-bold text-white tracking-wider">Omni Key</h2>
-              <span className="w-2 h-2 rounded-full bg-[#00f2fe] animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
             </div>
-            <p className="text-[10px] text-slate-400 tracking-widest uppercase font-semibold">
+            <p className="text-[10px] text-zinc-400 tracking-widest uppercase font-semibold">
               Dark Misfit Studios
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#00f2fe]/10 text-[#00f2fe] border border-[#00f2fe]/40 flex items-center gap-1.5">
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-red-950/40 text-red-400 border border-red-600/40 flex items-center gap-1.5">
               <Radio className="w-3 h-3 animate-pulse" />
               <span>{pairedDevice ? 'DESKTOP LINKED' : 'UNPAIRED'}</span>
             </span>
           </div>
         </div>
 
-        <p className="text-xs text-slate-300 leading-relaxed text-[11px]">
+        <p className="text-xs text-zinc-400 leading-relaxed text-[11px]">
           Seamlessly mirror Omni Key between your mobile phone and laptop/PC. Type on either device with synchronized memory ledgers, shared clipboards, and a global system-wide toggle overlay.
         </p>
 
         {/* Live Laptop Overlay Toggle Switcher */}
-        <div className="pt-1 flex items-center justify-between p-3 rounded-xl bg-black border border-white/10">
+        <div className="pt-1 flex items-center justify-between p-3 rounded-xl bg-[#121318] border border-zinc-800">
           <div>
             <span className="text-xs font-bold text-white block">
               Desktop Floating Overlay Toggle
             </span>
-            <span className="text-[10px] text-slate-400">
-              Hotkey: <strong className="text-[#00f2fe]">⌘+Shift+K</strong> (Mac) or <strong className="text-[#00f2fe]">Ctrl+Shift+K</strong> (PC)
+            <span className="text-[10px] text-zinc-400">
+              Hotkey: <strong className="text-red-400">⌘+Shift+K</strong> (Mac) or <strong className="text-red-400">Ctrl+Shift+K</strong> (PC)
             </span>
           </div>
 
@@ -275,8 +275,8 @@ fn main() {
             onClick={onToggleDesktopOverlay}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold font-mono transition ${
               isDesktopOverlayActive
-                ? 'bg-[#00f2fe] text-black shadow-[0_0_15px_rgba(0,242,254,0.4)]'
-                : 'bg-[#0B0B0C] text-slate-400 border border-white/10 hover:text-white'
+                ? 'bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.4)] hover:bg-red-500'
+                : 'bg-zinc-900 text-zinc-400 border border-zinc-800 hover:text-white'
             }`}
           >
             {isDesktopOverlayActive ? 'Dock Active ●' : 'Launch Dock'}
@@ -285,39 +285,39 @@ fn main() {
       </div>
 
       {/* 2. DEVICE PAIRING TUNNEL */}
-      <div className="p-4 rounded-2xl bg-[#0B0B0C] border border-white/10 space-y-3">
+      <div className="p-4 rounded-2xl bg-[#121318] border border-zinc-800 space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold text-white flex items-center gap-2">
-            <Laptop className="w-4 h-4 text-[#00f2fe]" />
+            <Laptop className="w-4 h-4 text-red-400" />
             <span>CROSS-DEVICE NEURAL TUNNEL</span>
           </span>
-          <span className="text-[10px] text-slate-500">AES-256 Encrypted</span>
+          <span className="text-[10px] text-zinc-500">AES-256 Encrypted</span>
         </div>
 
         <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="p-3 rounded-xl bg-black border border-white/5 space-y-1">
-            <span className="text-[10px] text-slate-400 block">LINKED COMPUTER</span>
+          <div className="p-3 rounded-xl bg-black border border-zinc-800 space-y-1">
+            <span className="text-[10px] text-zinc-400 block">LINKED COMPUTER</span>
             <p className="font-bold text-white text-xs truncate">
               {pairedDevice || 'No laptop linked'}
             </p>
-            <span className="text-[9px] text-[#00f2fe] flex items-center gap-1">
+            <span className="text-[9px] text-red-400 flex items-center gap-1">
               <Check className="w-3 h-3" /> Bi-directional sync active
             </span>
           </div>
 
-          <div className="p-3 rounded-xl bg-black border border-white/5 space-y-1">
-            <span className="text-[10px] text-slate-400 block">PAIRING PIN</span>
-            <p className="font-mono font-bold text-[#00f2fe] text-sm tracking-wider">
+          <div className="p-3 rounded-xl bg-black border border-zinc-800 space-y-1">
+            <span className="text-[10px] text-zinc-400 block">PAIRING PIN</span>
+            <p className="font-mono font-bold text-red-400 text-sm tracking-wider">
               {pairingPin}
             </p>
-            <span className="text-[9px] text-slate-500">Enter on laptop client</span>
+            <span className="text-[9px] text-zinc-500">Enter on laptop client</span>
           </div>
         </div>
 
         {/* Live Synced Clipboard Stream */}
         <div className="space-y-2 pt-1">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <Share2 className="w-3.5 h-3.5 text-[#00f2fe]" />
+          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
+            <Share2 className="w-3.5 h-3.5 text-red-400" />
             <span>LIVE SYNCED CLIPBOARD (PHONE ⇄ LAPTOP)</span>
           </span>
 
@@ -325,22 +325,22 @@ fn main() {
             {syncedClipboard.map((clip) => (
               <div
                 key={clip.id}
-                className="flex items-center justify-between p-2.5 rounded-xl bg-black/80 border border-white/5 text-xs hover:border-[#00f2fe]/40 transition group"
+                className="flex items-center justify-between p-2.5 rounded-xl bg-black border border-zinc-800/80 text-xs hover:border-red-600/40 transition group"
               >
                 <div className="overflow-hidden flex-1 pr-2">
-                  <div className="flex items-center gap-2 text-[9px] text-slate-400 mb-0.5">
-                    <span className="font-bold text-[#00f2fe]">{clip.device}</span>
+                  <div className="flex items-center gap-2 text-[9px] text-zinc-400 mb-0.5">
+                    <span className="font-bold text-red-400">{clip.device}</span>
                     <span>•</span>
                     <span>{clip.time}</span>
                   </div>
-                  <p className="text-[11px] text-slate-200 truncate font-mono">
+                  <p className="text-[11px] text-zinc-200 truncate font-mono">
                     {clip.text}
                   </p>
                 </div>
 
                 <button
                   onClick={() => onInsertToKeyboard?.(clip.text)}
-                  className="px-2 py-1 rounded-lg bg-[#00f2fe]/10 border border-[#00f2fe]/30 text-[#00f2fe] text-[10px] font-bold hover:bg-[#00f2fe]/20 transition shrink-0"
+                  className="px-2 py-1 rounded-lg bg-red-950/40 border border-red-600/40 text-red-400 text-[10px] font-bold hover:bg-red-900/40 transition shrink-0"
                 >
                   Insert
                 </button>
@@ -354,7 +354,7 @@ fn main() {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold text-white flex items-center gap-2">
-            <Terminal className="w-4 h-4 text-[#7f00ff]" />
+            <Terminal className="w-4 h-4 text-red-500" />
             <span>NATIVE SYSTEM-WIDE DESKTOP COMPANION PACKAGES</span>
           </span>
         </div>
@@ -365,8 +365,8 @@ fn main() {
             onClick={() => setActivePlatform('macos')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold font-mono transition ${
               activePlatform === 'macos'
-                ? 'bg-[#00f2fe] text-black shadow-[0_0_12px_rgba(0,242,254,0.3)]'
-                : 'bg-[#0B0B0C] text-slate-400 border border-white/10 hover:text-white'
+                ? 'bg-red-600 text-white shadow-[0_0_12px_rgba(220,38,38,0.3)]'
+                : 'bg-[#121318] text-zinc-400 border border-zinc-800 hover:text-white'
             }`}
           >
             macOS MenuBar & Overlay (Swift)
@@ -376,8 +376,8 @@ fn main() {
             onClick={() => setActivePlatform('windows')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold font-mono transition ${
               activePlatform === 'windows'
-                ? 'bg-[#7f00ff] text-white shadow-[0_0_12px_rgba(127,0,255,0.3)]'
-                : 'bg-[#0B0B0C] text-slate-400 border border-white/10 hover:text-white'
+                ? 'bg-red-600 text-white shadow-[0_0_12px_rgba(220,38,38,0.3)]'
+                : 'bg-[#121318] text-zinc-400 border border-zinc-800 hover:text-white'
             }`}
           >
             Windows/Linux HUD (Tauri/Rust)
@@ -387,8 +387,8 @@ fn main() {
             onClick={() => setActivePlatform('browser')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold font-mono transition ${
               activePlatform === 'browser'
-                ? 'bg-[#0575e6] text-white shadow-[0_0_12px_rgba(5,117,230,0.3)]'
-                : 'bg-[#0B0B0C] text-slate-400 border border-white/10 hover:text-white'
+                ? 'bg-red-600 text-white shadow-[0_0_12px_rgba(220,38,38,0.3)]'
+                : 'bg-[#121318] text-zinc-400 border border-zinc-800 hover:text-white'
             }`}
           >
             Browser Global SidePanel
@@ -396,9 +396,9 @@ fn main() {
         </div>
 
         {/* Code Box */}
-        <div className="rounded-2xl bg-[#0B0B0C] border border-white/10 overflow-hidden shadow-2xl">
-          <div className="flex items-center justify-between px-3.5 py-2 bg-black border-b border-white/10 text-xs">
-            <span className="font-mono text-[#00f2fe] text-[11px]">
+        <div className="rounded-2xl bg-[#121318] border border-zinc-800 overflow-hidden shadow-2xl">
+          <div className="flex items-center justify-between px-3.5 py-2 bg-black border-b border-zinc-800 text-xs">
+            <span className="font-mono text-red-400 text-[11px]">
               {activePlatform === 'macos'
                 ? 'OmniKeyDesktopOverlay.swift (macOS ⌘⇧K HUD)'
                 : activePlatform === 'windows'
@@ -416,10 +416,10 @@ fn main() {
                     : browserManifest;
                 handleCopyCode(code, activePlatform);
               }}
-              className="flex items-center gap-1 text-[11px] font-mono text-slate-300 hover:text-white"
+              className="flex items-center gap-1 text-[11px] font-mono text-zinc-300 hover:text-white"
             >
               {copiedKey === activePlatform ? (
-                <Check className="w-3.5 h-3.5 text-[#00f2fe]" />
+                <Check className="w-3.5 h-3.5 text-red-400" />
               ) : (
                 <Copy className="w-3.5 h-3.5" />
               )}
@@ -427,7 +427,7 @@ fn main() {
             </button>
           </div>
 
-          <pre className="p-3 text-[11px] font-mono text-slate-300 overflow-x-auto whitespace-pre max-h-64 leading-relaxed bg-[#050508]">
+          <pre className="p-3 text-[11px] font-mono text-zinc-300 overflow-x-auto whitespace-pre max-h-64 leading-relaxed bg-black">
             {activePlatform === 'macos'
               ? macosSwiftCode
               : activePlatform === 'windows'

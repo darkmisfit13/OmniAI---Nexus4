@@ -90,6 +90,35 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["id", "userId", "title"]
+    },
+    "chatThread": {
+      "title": "Chat Thread",
+      "description": "User conversation thread with Omni AI and Council",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title"]
+    },
+    "chatMessage": {
+      "title": "Chat Message",
+      "description": "Individual message inside a user chat thread",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "threadId": { "type": "string" },
+        "sender": { "type": "string", "enum": ["user", "omni", "council"] },
+        "text": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "mode": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "threadId", "text"]
     }
   },
   "firestore": {
@@ -116,6 +145,14 @@
     "/users/{userId}/notes/{noteId}": {
       "schema": "workspaceNote",
       "description": "User Google Keep and Workspace synchronized notes"
+    },
+    "/users/{userId}/chatThreads/{threadId}": {
+      "schema": "chatThread",
+      "description": "User synchronized chat threads"
+    },
+    "/users/{userId}/chatThreads/{threadId}/messages/{messageId}": {
+      "schema": "chatMessage",
+      "description": "User chat messages inside thread"
     }
   }
 }

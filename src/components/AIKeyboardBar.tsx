@@ -60,24 +60,24 @@ export const personaToneMeta: Record<PersonaTone, { label: string; shortLabel: s
     shortLabel: 'Action',
     desc: 'Clear, decisive, milestone-driven responses with zero fluff and immediate next steps.',
     icon: Zap,
-    color: 'text-[#00f2fe]',
-    badge: 'border-[#00f2fe]/40 bg-[#00f2fe]/10 text-[#00f2fe]',
+    color: 'text-red-400',
+    badge: 'border-red-600/40 bg-red-600/10 text-red-400',
   },
   rawHonest: {
     label: 'Raw & Honest',
     shortLabel: 'Raw',
     desc: 'Unvarnished truth and authentic transparency. Speaks reality without corporate spin.',
     icon: Flame,
-    color: 'text-[#c084fc]',
-    badge: 'border-[#7f00ff]/40 bg-[#7f00ff]/15 text-[#c084fc]',
+    color: 'text-amber-400',
+    badge: 'border-amber-500/40 bg-amber-500/10 text-amber-400',
   },
   witty: {
     label: 'Witty & Fast',
     shortLabel: 'Witty',
     desc: 'Playful confidence, sharp nocturnal banter, and effortless magnetism.',
     icon: Smile,
-    color: 'text-amber-300',
-    badge: 'border-amber-400/40 bg-amber-400/10 text-amber-300',
+    color: 'text-zinc-300',
+    badge: 'border-zinc-700 bg-zinc-800 text-zinc-300',
   },
 };
 
@@ -369,25 +369,25 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
     <div className="flex flex-col bg-[#000000] border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.8)] relative z-20">
       
       {/* 1. TOP INTELLIGENCE STATUS STRIP */}
-      <div className="flex items-center justify-between px-3 py-1.5 bg-[#0B0B0C] border-b border-white/10 text-xs">
+      <div className="flex items-center justify-between px-3 py-1.5 bg-[#0a0a0c] border-b border-zinc-800 text-xs">
         <div className="flex items-center gap-2 overflow-hidden flex-1">
           {/* OmniCore Telemetry HUD Trigger Button */}
           <button
             onClick={onOpenTelemetryHUD}
-            className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#00f2fe]/10 border border-[#00f2fe]/40 text-[#00f2fe] hover:bg-[#00f2fe]/20 text-[10px] font-mono font-bold transition shadow-[0_0_10px_rgba(0,242,254,0.15)] shrink-0"
+            className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-950/40 border border-red-600/40 text-red-400 hover:bg-red-950/60 text-[10px] font-mono font-bold transition shadow-[0_0_10px_rgba(220,38,38,0.2)] shrink-0"
             title="OmniCore Telemetry"
           >
-            <Activity className="w-3 h-3 text-[#00f2fe] animate-pulse" />
+            <Activity className="w-3 h-3 text-red-500 animate-pulse" />
             <span>OmniCore ({telemetryNotesCount})</span>
           </button>
 
           {/* Real-time Advice Pill */}
           <div 
             onClick={onOpenTelemetryHUD}
-            className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/80 border border-white/10 text-[11px] text-slate-300 hover:text-white cursor-pointer truncate transition max-w-[65%]"
+            className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black border border-zinc-800 text-[11px] text-zinc-300 hover:text-white cursor-pointer truncate transition max-w-[65%]"
             title="Click to inspect real-time notes"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00f2fe] animate-ping shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping shrink-0" />
             <span className="truncate font-mono text-[10px]">
               {liveAdvice[0] || 'Omni watching screen... tap for live coaching.'}
             </span>
@@ -406,16 +406,16 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
             }}
             className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-mono font-bold transition-all border shadow-sm ${
               showToneMenu
-                ? 'bg-gradient-to-r from-[#00f2fe]/20 to-[#7f00ff]/30 text-white border-[#00f2fe]'
-                : 'bg-black/85 text-cyan-300 border-cyan-500/40 hover:border-cyan-300 hover:text-white'
+                ? 'bg-red-950/60 text-white border-red-500'
+                : 'bg-[#121318] text-zinc-300 border-zinc-800 hover:border-red-500/40 hover:text-white'
             }`}
             title="Change Tone"
           >
-            <Wand2 className="w-3 h-3 text-[#00f2fe]" />
+            <Wand2 className="w-3 h-3 text-red-400" />
             <span className="text-[10px] font-bold text-white hidden sm:inline">
               {personaToneMeta[autoPilotTone]?.shortLabel || 'Action'}
             </span>
-            <ChevronDown className={`w-3 h-3 text-cyan-400 transition-transform ${showToneMenu ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`w-3 h-3 text-zinc-400 transition-transform ${showToneMenu ? 'rotate-180' : ''}`} />
           </button>
 
           {/* Primary Open-Air Control: Auto-Pilot Toggle */}
@@ -424,12 +424,12 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
               onClick={onToggleAutoMode}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition shadow ${
                 isAutoMode 
-                  ? 'bg-gradient-to-r from-[#6c63ff] to-[#00f2fe] text-slate-950 font-black shadow-[0_0_12px_rgba(0,242,254,0.4)] animate-pulse' 
-                  : 'bg-black border border-white/10 text-slate-400 hover:text-white'
+                  ? 'bg-gradient-to-r from-red-600 to-red-700 text-white font-bold shadow-[0_0_12px_rgba(220,38,38,0.4)] animate-pulse' 
+                  : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
               }`}
               title="Toggle Auto-Pilot autonomous response"
             >
-              <Zap className={`w-3 h-3 ${isAutoMode ? 'text-slate-950 fill-current' : 'text-slate-500'}`} />
+              <Zap className={`w-3 h-3 ${isAutoMode ? 'text-white fill-current' : 'text-zinc-500'}`} />
               <span className="text-[10px]">{isAutoMode ? 'AUTO: ON' : 'AUTO'}</span>
             </button>
           )}
@@ -442,12 +442,12 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
             }}
             className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all border shadow ${
               isFolderOpen
-                ? 'bg-[#6c63ff] text-white border-[#6c63ff] shadow-[0_0_15px_rgba(108,99,255,0.4)]'
-                : 'bg-[#14121f] text-[#a594fd] border-[#6c63ff]/40 hover:border-[#6c63ff] hover:text-white'
+                ? 'bg-red-600 text-white border-red-500 shadow-[0_0_12px_rgba(220,38,38,0.4)]'
+                : 'bg-zinc-900 text-zinc-300 border-zinc-800 hover:border-red-500/40 hover:text-white'
             }`}
             title="Expand Command Center Folder (Grammar, Clipboard, GIFs/Emojis, Text Slider)"
           >
-            {isFolderOpen ? <FolderOpen className="w-3.5 h-3.5 text-white" /> : <Folder className="w-3.5 h-3.5 text-[#00f2fe]" />}
+            {isFolderOpen ? <FolderOpen className="w-3.5 h-3.5 text-white" /> : <Folder className="w-3.5 h-3.5 text-red-400" />}
             <span className="text-[10.5px]">📁</span>
           </button>
         </div>
@@ -503,12 +503,12 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
             </button>
           </div>
           
-          <div className="p-2.5 rounded-xl bg-black/70 border border-white/10 space-y-1.5 text-[11px]">
-            <p className="text-slate-200 leading-relaxed">
-              <strong className="text-amber-400">Plain English:</strong> {explainedTerm.plainMeaning}
+          <div className="p-2.5 rounded-xl bg-black border border-zinc-800 space-y-1.5 text-[11px]">
+            <p className="text-zinc-200 leading-relaxed">
+              <strong className="text-zinc-400">Plain English:</strong> {explainedTerm.plainMeaning}
             </p>
-            <p className="text-cyan-300 leading-relaxed">
-              <strong className="text-[#00f2fe]">Strategic Move:</strong> {explainedTerm.tacticalAdvice}
+            <p className="text-red-300 leading-relaxed">
+              <strong className="text-red-400">Strategic Move:</strong> {explainedTerm.tacticalAdvice}
             </p>
           </div>
         </div>
@@ -516,10 +516,10 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
 
       {/* 3. COLLAPSIBLE FOLDER DRAWER TRAY (`📁`) */}
       {isFolderOpen && (
-        <div className="bg-[#0f0d1c] border-b border-[#6c63ff]/40 shadow-2xl animate-in slide-in-from-top-2 duration-150 relative z-30">
+        <div className="bg-[#0a0a0c] border-b border-zinc-800 shadow-2xl animate-in slide-in-from-top-2 duration-150 relative z-30">
           
           {/* Folder Drawer Tabs */}
-          <div className="flex items-center justify-between p-2 px-3 border-b border-white/10 bg-[#090812]">
+          <div className="flex items-center justify-between p-2 px-3 border-b border-zinc-800 bg-[#121318]">
             <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
               {[
                 { id: 'grammar', label: 'Grammar Suite', icon: CheckCircle2 },
@@ -535,8 +535,8 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
                     onClick={() => setFolderTab(tab.id as any)}
                     className={`flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-mono font-bold transition ${
                       active
-                        ? 'bg-[#6c63ff] text-white shadow-md shadow-[#6c63ff]/30'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                        ? 'bg-red-600 text-white shadow-md shadow-red-950/40'
+                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800'
                     }`}
                   >
                     <Icon className="w-3.5 h-3.5" />
@@ -548,7 +548,7 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
 
             <button
               onClick={() => setIsFolderOpen(false)}
-              className="text-slate-400 hover:text-white p-1"
+              className="text-zinc-400 hover:text-white p-1"
               title="Close drawer"
             >
               <X className="w-4 h-4" />
@@ -562,20 +562,20 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
             {folderTab === 'grammar' && (
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-300 font-bold flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Active Grammar & Formality Suite
+                  <span className="text-zinc-300 font-bold flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-red-400" /> Active Grammar & Formality Suite
                   </span>
                   <button
                     onClick={() => handleTriggerQuickAction('fix-grammar')}
-                    className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 font-bold text-[10px]"
+                    className="px-2.5 py-1 rounded-lg bg-red-950/40 text-red-300 border border-red-600/40 hover:bg-red-900/40 font-bold text-[10px]"
                   >
                     1-Click Auto-Fix Punctuation
                   </button>
                 </div>
 
                 {/* Formality Level Selector */}
-                <div className="p-2.5 rounded-xl bg-black/60 border border-white/10 space-y-2">
-                  <span className="text-[10px] text-slate-400 uppercase font-bold">Formality Level:</span>
+                <div className="p-2.5 rounded-xl bg-black border border-zinc-800 space-y-2">
+                  <span className="text-[10px] text-zinc-400 uppercase font-bold">Formality Level:</span>
                   <div className="grid grid-cols-4 gap-1.5">
                     {(['casual', 'crisp', 'executive', 'magnetic'] as const).map((lvl) => (
                       <button
@@ -586,8 +586,8 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
                         }}
                         className={`py-1 px-2 rounded-lg text-center text-[10.5px] font-bold capitalize transition ${
                           formalityLevel === lvl
-                            ? 'bg-[#00f2fe] text-slate-950 shadow-md'
-                            : 'bg-slate-900 text-slate-400 hover:text-white'
+                            ? 'bg-red-600 text-white shadow-md'
+                            : 'bg-zinc-900 text-zinc-400 hover:text-white'
                         }`}
                       >
                         {lvl}
@@ -599,16 +599,16 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
                 <div className="grid grid-cols-2 gap-2 text-[11px]">
                   <button
                     onClick={() => handleTriggerQuickAction('bulletize')}
-                    className="p-2 rounded-xl bg-black/60 hover:bg-[#1a1729] border border-white/10 text-left text-slate-300 flex items-center gap-2"
+                    className="p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-left text-zinc-300 flex items-center gap-2"
                   >
-                    <List className="w-3.5 h-3.5 text-blue-400" />
+                    <List className="w-3.5 h-3.5 text-red-400" />
                     <span>Bulletize Draft</span>
                   </button>
                   <button
                     onClick={() => handleTriggerQuickAction('expand')}
-                    className="p-2 rounded-xl bg-black/60 hover:bg-[#1a1729] border border-white/10 text-left text-slate-300 flex items-center gap-2"
+                    className="p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-left text-zinc-300 flex items-center gap-2"
                   >
-                    <Maximize2 className="w-3.5 h-3.5 text-purple-400" />
+                    <Maximize2 className="w-3.5 h-3.5 text-red-400" />
                     <span>Expand with Context</span>
                   </button>
                 </div>
@@ -620,19 +620,19 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
                   <div className="relative flex-1">
-                    <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
+                    <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       value={snippetSearch}
                       onChange={(e) => setSnippetSearch(e.target.value)}
                       placeholder="Search snippets & clipboard..."
-                      className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-black/70 border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none"
+                      className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-black border border-zinc-800 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-red-500"
                     />
                   </div>
                   <button
                     onClick={handleSaveCurrentToSnippets}
                     disabled={!currentText.trim()}
-                    className="px-2.5 py-1.5 rounded-xl bg-[#6c63ff] hover:bg-[#584fe0] text-white text-[10.5px] font-bold flex items-center gap-1 shrink-0 disabled:opacity-40"
+                    className="px-2.5 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-[10.5px] font-bold flex items-center gap-1 shrink-0 disabled:opacity-40"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>{newSnippetAdded ? 'Saved!' : 'Save Draft'}</span>
@@ -651,17 +651,17 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
                           onChangeText(snippet.text);
                           setIsFolderOpen(false);
                         }}
-                        className="p-2.5 rounded-xl bg-black/60 hover:bg-[#1a1729] border border-white/10 hover:border-[#00f2fe]/40 cursor-pointer transition flex items-center justify-between group"
+                        className="p-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-red-500/40 cursor-pointer transition flex items-center justify-between group"
                       >
                         <div className="min-w-0 pr-2">
-                          <span className="text-white font-bold text-xs group-hover:text-[#00f2fe] block truncate">
+                          <span className="text-white font-bold text-xs group-hover:text-red-400 block truncate">
                             {snippet.title}
                           </span>
-                          <span className="text-slate-400 text-[10px] truncate block">
+                          <span className="text-zinc-400 text-[10px] truncate block">
                             {snippet.text}
                           </span>
                         </div>
-                        <span className="text-[10px] font-mono text-[#00f2fe] shrink-0 opacity-60 group-hover:opacity-100">
+                        <span className="text-[10px] font-mono text-red-400 shrink-0 opacity-60 group-hover:opacity-100">
                           Insert →
                         </span>
                       </div>
@@ -677,7 +677,7 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
                 <div className="space-y-2">
                   {EMOJI_CATEGORIES.map((cat, i) => (
                     <div key={i} className="space-y-1">
-                      <span className="text-[9px] uppercase tracking-wider text-slate-500 font-bold block">{cat.label}</span>
+                      <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-bold block">{cat.label}</span>
                       <div className="flex flex-wrap gap-1.5">
                         {cat.items.map((em, j) => (
                           <button
@@ -686,7 +686,7 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
                               triggerHaptic(8);
                               onChangeText(currentText + em);
                             }}
-                            className="w-8 h-8 rounded-xl bg-black/60 hover:bg-[#1f1b33] border border-white/10 text-base flex items-center justify-center transition active:scale-90"
+                            className="w-8 h-8 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-base flex items-center justify-center transition active:scale-90"
                           >
                             {em}
                           </button>
@@ -697,8 +697,8 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
                 </div>
 
                 {/* Holographic Stickers */}
-                <div className="pt-2 border-t border-white/10 space-y-1.5">
-                  <span className="text-[9px] uppercase tracking-wider text-[#00f2fe] font-bold block">Omni Holographic Stickers:</span>
+                <div className="pt-2 border-t border-zinc-800 space-y-1.5">
+                  <span className="text-[9px] uppercase tracking-wider text-red-400 font-bold block">Omni Holographic Stickers:</span>
                   <div className="grid grid-cols-2 gap-2">
                     {STICKERS.map((stk, idx) => (
                       <button
@@ -707,12 +707,12 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
                           triggerHaptic(12);
                           onChangeText(`${currentText} [${stk.symbol} ${stk.name}]`);
                         }}
-                        className="p-2 rounded-xl bg-black/60 hover:bg-[#1f1b33] border border-white/10 hover:border-[#6c63ff] flex items-center gap-2 text-left transition"
+                        className="p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-red-500/40 flex items-center gap-2 text-left transition"
                       >
                         <span className="text-xl">{stk.symbol}</span>
                         <div>
                           <div className="text-[10.5px] font-bold text-white leading-tight">{stk.name}</div>
-                          <div className="text-[8px] text-[#a594fd] font-mono">{stk.tag}</div>
+                          <div className="text-[8px] text-zinc-400 font-mono">{stk.tag}</div>
                         </div>
                       </button>
                     ))}
@@ -725,10 +725,10 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
             {folderTab === 'formatting' && (
               <div className="space-y-3.5">
                 {/* Text Size Scale Slider */}
-                <div className="p-3 rounded-xl bg-black/60 border border-white/10 space-y-2">
+                <div className="p-3 rounded-xl bg-black border border-zinc-800 space-y-2">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-slate-400">Keyboard Text Size Scale:</span>
-                    <span className="text-[#00f2fe] font-bold">{textScale}%</span>
+                    <span className="text-zinc-400">Keyboard Text Size Scale:</span>
+                    <span className="text-red-400 font-bold">{textScale}%</span>
                   </div>
                   <input
                     type="range"
@@ -737,9 +737,9 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
                     step="5"
                     value={textScale}
                     onChange={(e) => setTextScale(parseInt(e.target.value, 10))}
-                    className="w-full accent-[#00f2fe] h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+                    className="w-full accent-red-600 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
                   />
-                  <div className="flex justify-between text-[9px] text-slate-500">
+                  <div className="flex justify-between text-[9px] text-zinc-500">
                     <span>Compact (80%)</span>
                     <span>Standard (100%)</span>
                     <span>Large (140%)</span>
@@ -800,12 +800,12 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
 
       {/* 4. PERSISTENT PERSONA TONE SELECTION MODAL / DROPDOWN */}
       {showToneMenu && (
-        <div className="p-3 bg-[#080b12] border-b border-cyan-500/30 animate-in slide-in-from-top-2 duration-150 space-y-2.5 shadow-2xl relative z-30">
+        <div className="p-3 bg-[#121318] border-b border-zinc-800 animate-in slide-in-from-top-2 duration-150 space-y-2.5 shadow-2xl relative z-30">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Wand2 className="w-4 h-4 text-[#00f2fe]" />
+              <Wand2 className="w-4 h-4 text-red-400" />
               <span className="font-bold text-xs text-white font-mono">Persona Tone Selector</span>
-              <span className="text-[10px] text-slate-400 font-mono">• Switch AI Response Style</span>
+              <span className="text-[10px] text-zinc-400 font-mono">• Switch AI Response Style</span>
             </div>
             <div className="flex items-center gap-2">
               {onOpenAutoPilotSetup && (
@@ -815,7 +815,7 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
                     setShowToneMenu(false);
                     onOpenAutoPilotSetup();
                   }}
-                  className="px-2 py-0.5 rounded-lg bg-[#6c63ff]/20 text-[#a594fd] border border-[#6c63ff]/40 text-[10px] font-mono hover:bg-[#6c63ff]/30 font-bold"
+                  className="px-2 py-0.5 rounded-lg bg-red-600/20 text-red-300 border border-red-500/40 text-[10px] font-mono hover:bg-red-600/30 font-bold"
                 >
                   ⚡ Calibrate Persona / Voice Clone
                 </button>
@@ -823,7 +823,7 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
               <button
                 type="button"
                 onClick={() => setShowToneMenu(false)}
-                className="text-slate-400 hover:text-white p-1 rounded hover:bg-white/10"
+                className="text-zinc-400 hover:text-white p-1 rounded hover:bg-zinc-800"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -847,8 +847,8 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
                   }}
                   className={`flex flex-col items-start p-2.5 rounded-xl border text-left transition-all ${
                     isSelected
-                      ? 'bg-cyan-950/50 border-[#00f2fe] shadow-[0_0_15px_rgba(0,242,254,0.3)]'
-                      : 'bg-black/80 border-white/10 hover:border-white/25 hover:bg-black/95'
+                      ? 'bg-red-950/40 border-red-500/60 shadow-[0_0_15px_rgba(220,38,38,0.25)]'
+                      : 'bg-black border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900'
                   }`}
                 >
                   <div className="flex items-center justify-between w-full mb-1">
@@ -857,12 +857,12 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
                       <span className="font-bold text-xs text-white font-mono">{meta.label}</span>
                     </div>
                     {isSelected && (
-                      <span className="flex items-center gap-1 text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[#00f2fe]/20 text-[#00f2fe] border border-[#00f2fe]/40 font-bold">
+                      <span className="flex items-center gap-1 text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-red-600/20 text-red-400 border border-red-600/40 font-bold">
                         <Check className="w-2.5 h-2.5" /> ACTIVE
                       </span>
                     )}
                   </div>
-                  <p className="text-[10.5px] text-slate-400 leading-snug font-sans">
+                  <p className="text-[10.5px] text-zinc-400 leading-snug font-sans">
                     {meta.desc}
                   </p>
                 </button>
@@ -873,9 +873,9 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
       )}
 
       {/* 5. PRIMARY OPEN-AIR CONTROLS: QUICK ACTIONS ROW */}
-      <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#07080e] border-b border-white/10 overflow-x-auto no-scrollbar">
-        <div className="flex items-center gap-1 text-[9.5px] font-mono text-[#00f2fe] shrink-0 font-bold uppercase tracking-wider pr-1.5 border-r border-white/10">
-          <Sparkles className="w-3 h-3 text-[#00f2fe]" />
+      <div className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0a0a0c] border-b border-zinc-800 overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-1 text-[9.5px] font-mono text-red-400 shrink-0 font-bold uppercase tracking-wider pr-1.5 border-r border-zinc-800">
+          <Sparkles className="w-3 h-3 text-red-400" />
           <span>Quick:</span>
         </div>
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
@@ -888,14 +888,14 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
                 key={action.id}
                 onClick={() => handleTriggerQuickAction(action.id)}
                 disabled={isProcessing}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/70 border border-white/10 text-[10.5px] font-mono font-medium transition-all shrink-0 active:scale-95 shadow-sm ${action.color} ${
-                  isDone ? 'border-[#00f2fe] bg-[#00f2fe]/15 text-[#00f2fe] shadow-[0_0_10px_rgba(0,242,254,0.3)]' : ''
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-[10.5px] font-mono font-medium transition-all shrink-0 active:scale-95 shadow-sm hover:border-red-500/40 hover:text-white ${
+                  isDone ? 'border-red-500 bg-red-950/40 text-red-400 shadow-[0_0_10px_rgba(220,38,38,0.3)]' : 'text-zinc-300'
                 }`}
                 title={action.desc}
               >
-                <Icon className={`w-3 h-3 ${isProcessing ? 'animate-spin text-[#00f2fe]' : isDone ? 'text-[#00f2fe]' : ''}`} />
+                <Icon className={`w-3 h-3 ${isProcessing ? 'animate-spin text-red-400' : isDone ? 'text-red-400' : ''}`} />
                 <span>{action.label}</span>
-                {isDone && <Check className="w-2.5 h-2.5 text-[#00f2fe]" />}
+                {isDone && <Check className="w-2.5 h-2.5 text-red-400" />}
               </button>
             );
           })}
@@ -903,13 +903,13 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
       </div>
 
       {/* 6. ACTIVE TYPING DOCK */}
-      <div className="flex items-center gap-2 px-3 py-2 bg-[#0B0B0C] border-t border-white/10">
+      <div className="flex items-center gap-2 px-3 py-2 bg-[#0a0a0c] border-t border-zinc-800">
         <button
           onClick={handleMicDictate}
           className={`p-2 rounded-xl border transition ${
             isListening
-              ? 'bg-[#7f00ff]/20 text-[#00f2fe] border-[#00f2fe] animate-pulse shadow-[0_0_12px_rgba(0,242,254,0.5)]'
-              : 'bg-black text-slate-400 border-white/10 hover:text-white'
+              ? 'bg-red-600 text-white border-red-500 animate-pulse shadow-[0_0_14px_rgba(220,38,38,0.6)]'
+              : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-white hover:border-zinc-700'
           }`}
           title="Dictate raw thoughts"
         >
@@ -925,7 +925,7 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
               omniVoice.speak('OmniAI shadow companion active. Standing by for screen cognition.');
             }
           }}
-          className="p-2 rounded-xl border bg-black text-slate-400 border-white/10 hover:text-[#00f2fe] hover:border-[#00f2fe]/40 transition"
+          className="p-2 rounded-xl border bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-red-400 hover:border-red-600/40 transition"
           title="Listen to OmniVoice"
         >
           <Volume2 className="w-4 h-4" />
@@ -945,12 +945,12 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
             }}
             style={{ fontSize: `${(12 * textScale) / 100}px` }}
             placeholder="Type with Omni AI • Dark Misfit Studios..."
-            className="w-full rounded-xl bg-[#000000] border border-white/15 px-3.5 py-2 text-white placeholder-slate-600 focus:outline-none focus:border-[#00f2fe]/80 focus:ring-1 focus:ring-[#00f2fe]/40 font-mono transition pr-8 shadow-inner"
+            className="w-full rounded-xl bg-black border border-zinc-800 px-3.5 py-2 text-white placeholder-zinc-600 focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600/40 font-mono transition pr-8 shadow-inner"
           />
           {currentText && (
             <button
               onClick={() => onChangeText('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white p-0.5 font-bold"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white p-0.5 font-bold"
               title="Clear text"
             >
               ×
@@ -964,19 +964,19 @@ export const AIKeyboardBar: React.FC<AIKeyboardBarProps> = ({
           disabled={!currentText}
           className={`p-2 rounded-xl border transition disabled:opacity-30 ${
             copied
-              ? 'bg-[#00f2fe]/20 text-[#00f2fe] border-[#00f2fe]/50 shadow-[0_0_10px_rgba(0,242,254,0.3)]'
-              : 'bg-black text-slate-300 border-white/10 hover:bg-[#18181b]'
+              ? 'bg-red-600/20 text-red-400 border-red-500/50 shadow-[0_0_10px_rgba(220,38,38,0.3)]'
+              : 'bg-zinc-900 text-zinc-300 border-zinc-800 hover:bg-zinc-800'
           }`}
           title="Copy text to phone clipboard"
         >
-          {copied ? <Check className="w-4 h-4 text-[#00f2fe]" /> : <Copy className="w-4 h-4" />}
+          {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
         </button>
 
-        {/* Send / Commit into input stream */}
+        {/* Send / Commit into input stream - High-Impact Deep Crimson Action */}
         <button
           onClick={() => onSend(currentText)}
           disabled={!currentText}
-          className="p-2 rounded-xl bg-gradient-to-r from-[#00f2fe] via-[#7f00ff] to-[#0575e6] text-black font-bold shadow-[0_0_15px_rgba(0,242,254,0.3)] hover:brightness-110 active:scale-95 transition disabled:opacity-40"
+          className="p-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-bold border border-red-500/50 shadow-[0_0_15px_rgba(220,38,38,0.4)] hover:brightness-110 active:scale-95 transition disabled:opacity-40"
           title="Send into conversation"
         >
           <Send className="w-4 h-4" />

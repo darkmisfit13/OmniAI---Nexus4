@@ -37,7 +37,9 @@ import {
   X,
   Search,
   Lock,
-  User as UserIcon
+  User as UserIcon,
+  Cloud,
+  Database
 } from 'lucide-react';
 import { HoloOrb, OrbPhase } from './HoloOrb';
 import { omniVoice } from '../lib/omniVoice';
@@ -124,6 +126,9 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
     renameCurrentThread,
     deleteCurrentThread,
     supabaseUser,
+    firebaseUser,
+    cloudSyncState,
+    syncAllToCloud,
   } = useOmniChat();
   const [isThreadsDrawerOpen, setIsThreadsDrawerOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -671,36 +676,55 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
   };
 
   return (
-    <div className="h-full flex flex-col bg-[#07090f] text-slate-100 overflow-hidden font-sans">
+    <div className="h-full flex flex-col bg-black text-zinc-100 overflow-hidden font-sans">
       
       {/* Compact Mobile Mode Switcher & Threads Bar */}
-      <div className="px-3 py-2 bg-[#090c15] border-b border-slate-800 flex items-center justify-between flex-shrink-0 gap-2">
+      <div className="px-3 py-2 bg-[#0a0a0c] border-b border-zinc-800 flex items-center justify-between flex-shrink-0 gap-2">
         {/* Left: HoloOrb + Thread Selector */}
         <div className="flex items-center gap-1.5 overflow-hidden">
           <HoloOrb phase={orbPhase} className="w-6 h-6 flex-shrink-0" />
           <button
             onClick={() => setIsThreadsDrawerOpen(true)}
-            className="flex items-center gap-1.5 px-2 py-1 rounded-xl bg-black/60 border border-slate-800 hover:border-cyan-500/40 transition max-w-[140px] sm:max-w-[200px]"
+            className="flex items-center gap-1.5 px-2 py-1 rounded-xl bg-[#121318] border border-zinc-800 hover:border-red-500/40 transition max-w-[140px] sm:max-w-[200px]"
             title="Open Conversations & Threads"
           >
-            <History className="w-3.5 h-3.5 text-[#00f2fe] shrink-0" />
-            <span className="truncate text-xs font-mono font-medium text-slate-200">
+            <History className="w-3.5 h-3.5 text-red-500 shrink-0" />
+            <span className="truncate text-xs font-mono font-medium text-zinc-200">
               {activeThread ? activeThread.title : 'New Chat'}
             </span>
-            <ChevronDown className="w-3 h-3 text-slate-500 shrink-0" />
+            <ChevronDown className="w-3 h-3 text-zinc-500 shrink-0" />
           </button>
         </div>
 
-        {/* Right: Mode Switcher + Auth + New Thread */}
+        {/* Right: Mode Switcher + Cloud Sync Status + Auth + New Thread */}
         <div className="flex items-center gap-1.5 shrink-0">
+          {/* Cloud Sync Status Badge */}
+          <button
+            onClick={() => syncAllToCloud()}
+            className="flex items-center gap-1 px-2 py-1 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-red-500/40 text-[10px] font-mono text-zinc-300 transition"
+            title={
+              cloudSyncState.status === 'syncing'
+                ? 'Syncing chat history to Firebase & Supabase...'
+                : cloudSyncState.lastSyncedAt
+                ? `Cloud Synced (${cloudSyncState.provider}) at ${new Date(cloudSyncState.lastSyncedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}. Click to sync now.`
+                : 'Cloud sync active (Firebase/Supabase). Click to sync now.'
+            }
+          >
+            <Cloud className={`w-3 h-3 ${cloudSyncState.status === 'syncing' ? 'text-red-400 animate-spin' : 'text-red-500'}`} />
+            <span className="hidden xs:inline">
+              {cloudSyncState.status === 'syncing' ? 'Syncing...' : 'Synced'}
+            </span>
+            <span className={`w-1.5 h-1.5 rounded-full ${cloudSyncState.status === 'syncing' ? 'bg-amber-400 animate-ping' : 'bg-red-500'}`} />
+          </button>
+
           {/* Compact Mode Switcher */}
-          <div className="flex items-center bg-slate-900 border border-slate-800 rounded-lg p-0.5 text-xs font-semibold">
+          <div className="flex items-center bg-zinc-900 border border-zinc-800 rounded-lg p-0.5 text-xs font-semibold">
             <button
               onClick={() => setActiveMode('normal')}
               className={`px-2 py-0.5 rounded-md flex items-center gap-1 transition-all ${
                 activeMode === 'normal'
-                  ? 'bg-cyan-500 text-slate-950 font-bold shadow-sm'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-red-600 text-white font-bold shadow-sm shadow-red-950/40'
+                  : 'text-zinc-400 hover:text-white'
               }`}
             >
               <Bot className="w-3 h-3" />
@@ -710,8 +734,8 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
               onClick={() => setActiveMode('council')}
               className={`px-2 py-0.5 rounded-md flex items-center gap-1 transition-all ${
                 activeMode === 'council'
-                  ? 'bg-purple-600 text-white font-bold shadow-sm'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-zinc-800 text-zinc-100 font-bold border border-zinc-700 shadow-sm'
+                  : 'text-zinc-400 hover:text-white'
               }`}
             >
               <Users className="w-3 h-3" />
@@ -723,19 +747,19 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
           {supabaseUser ? (
             <button
               onClick={() => setIsAuthModalOpen(true)}
-              className="flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-[10px] font-mono text-emerald-300 hover:border-emerald-400 transition"
+              className="flex items-center gap-1 px-2 py-1 rounded-lg bg-red-950/30 border border-red-600/30 text-[10px] font-mono text-red-300 hover:border-red-500 transition"
               title={`Supabase Connected: ${supabaseUser.email}`}
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
               <span className="hidden sm:inline truncate max-w-[65px]">{supabaseUser.email?.split('@')[0]}</span>
             </button>
           ) : (
             <button
               onClick={() => setIsAuthModalOpen(true)}
-              className="flex items-center gap-1 px-2 py-1 rounded-lg bg-cyan-950/40 border border-cyan-500/40 text-[10px] font-mono text-cyan-300 hover:text-white transition shadow-sm"
+              className="flex items-center gap-1 px-2 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-300 hover:text-white hover:border-red-500/40 transition shadow-sm"
               title="Sign in with Supabase account to sync threads across web & phone"
             >
-              <LogIn className="w-3 h-3" />
+              <LogIn className="w-3 h-3 text-red-400" />
               <span className="hidden xs:inline">Sync</span>
             </button>
           )}
@@ -743,7 +767,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
           {/* Quick New Thread Button */}
           <button
             onClick={handleNewThread}
-            className="p-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-cyan-500/40 text-slate-300 hover:text-white transition"
+            className="p-1 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-red-500/40 text-zinc-300 hover:text-white transition"
             title="Start New Conversation"
           >
             <Plus className="w-3.5 h-3.5" />
@@ -752,11 +776,11 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
       </div>
 
       {/* Voice Setting Control Bar */}
-      <div className="px-3 py-2 bg-[#080b14] border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 shrink-0">
+      <div className="px-3 py-2 bg-[#121318] border-b border-zinc-800 flex flex-wrap items-center justify-between gap-2 shrink-0">
         <div className="flex items-center gap-2 flex-1 min-w-[220px]">
-          <div className="flex items-center gap-1.5 text-cyan-400 font-mono text-xs shrink-0">
+          <div className="flex items-center gap-1.5 text-red-400 font-mono text-xs shrink-0">
             <Volume2 className="w-3.5 h-3.5" />
-            <label htmlFor="omni-voice-dropdown" className="font-semibold text-slate-200">
+            <label htmlFor="omni-voice-dropdown" className="font-semibold text-zinc-200">
               Voice:
             </label>
           </div>
@@ -766,7 +790,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
             value={selectedVoiceURI}
             onChange={(e) => handleVoiceSelect(e.target.value)}
             disabled={!speechSupported || availableVoices.length === 0}
-            className="flex-1 bg-black/80 border border-slate-800 hover:border-cyan-500/50 text-slate-200 text-xs rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-cyan-400 transition font-mono truncate max-w-[260px] sm:max-w-md disabled:opacity-50"
+            className="flex-1 bg-black border border-zinc-800 hover:border-red-500/40 text-zinc-200 text-xs rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-red-500 transition font-mono truncate max-w-[260px] sm:max-w-md disabled:opacity-50"
           >
             <option value="">Default (Stoic Shadow Companion)</option>
             {availableVoices.map((v) => (
@@ -782,10 +806,10 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
             type="button"
             onClick={handleVoicePreview}
             disabled={!speechSupported || isPreviewingVoice}
-            className="px-2.5 py-1.5 rounded-xl bg-cyan-950/60 border border-cyan-500/40 hover:border-cyan-400 text-cyan-300 hover:text-white text-xs font-mono font-medium flex items-center gap-1.5 transition shadow-sm active:scale-95 disabled:opacity-40"
+            className="px-2.5 py-1.5 rounded-xl bg-red-950/40 border border-red-600/40 hover:border-red-500 text-red-300 hover:text-white text-xs font-mono font-medium flex items-center gap-1.5 transition shadow-sm active:scale-95 disabled:opacity-40"
             title="Preview selected voice before choosing"
           >
-            <Play className={`w-3.5 h-3.5 ${isPreviewingVoice ? 'text-emerald-400 animate-spin' : 'text-cyan-400'}`} />
+            <Play className={`w-3.5 h-3.5 ${isPreviewingVoice ? 'text-red-400 animate-spin' : 'text-red-400'}`} />
             <span>{isPreviewingVoice ? 'Testing...' : 'Preview Voice'}</span>
           </button>
         </div>
@@ -793,33 +817,33 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
 
       {/* Friendly status message if speech synthesis is not supported */}
       {!speechSupported && (
-        <div className="px-3 py-1.5 bg-amber-950/40 border-b border-amber-600/30 text-amber-300 text-xs flex items-center gap-2 font-mono shrink-0">
-          <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+        <div className="px-3 py-1.5 bg-zinc-900 border-b border-zinc-800 text-zinc-300 text-xs flex items-center gap-2 font-mono shrink-0">
+          <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
           <span>Speech synthesis is not supported on this browser or device. Visual transcription remains fully active.</span>
         </div>
       )}
 
       {/* Friendly status message if selected voice is unavailable on this device */}
       {speechSupported && selectedVoiceURI && !isSelectedVoiceAvailable && (
-        <div className="px-3 py-1.5 bg-amber-950/40 border-b border-amber-600/30 text-amber-300 text-xs flex items-center gap-2 font-mono shrink-0">
-          <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+        <div className="px-3 py-1.5 bg-zinc-900 border-b border-zinc-800 text-zinc-300 text-xs flex items-center gap-2 font-mono shrink-0">
+          <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
           <span>The selected voice "{selectedVoiceURI}" is not available on this device; Omni is using the system default voice.</span>
         </div>
       )}
 
-      {/* Informational Supabase Sync Banner if unauthenticated */}
+      {/* Informational Supabase & Firebase Sync Banner */}
       {!supabaseUser && (
-        <div className="px-3 py-1.5 bg-[#090e1c] border-b border-cyan-900/40 flex items-center justify-between text-[11px] font-mono shrink-0">
-          <div className="flex items-center gap-1.5 text-slate-300 truncate">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00f2fe] animate-pulse shrink-0" />
-            <span className="truncate">Sign in with Supabase to sync threads with OmniAI Web.</span>
+        <div className="px-3 py-1.5 bg-[#0a0a0c] border-b border-zinc-800 flex items-center justify-between text-[11px] font-mono shrink-0">
+          <div className="flex items-center gap-1.5 text-zinc-400 truncate">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shrink-0" />
+            <span className="truncate">Sign in to sync threads across Firebase & Supabase.</span>
           </div>
           <button
             onClick={() => {
               setAuthMode('signin');
               setIsAuthModalOpen(true);
             }}
-            className="text-[#00f2fe] hover:underline font-bold shrink-0 ml-2"
+            className="text-red-400 hover:underline font-bold shrink-0 ml-2"
           >
             Sign In →
           </button>
@@ -828,15 +852,15 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
 
       {/* Council Mode Banner */}
       {activeMode === 'council' && (
-        <div className="px-4 py-2 bg-gradient-to-r from-purple-950/40 via-indigo-950/30 to-purple-950/40 border-b border-purple-900/40 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2 text-purple-200">
-            <Scale className="w-4 h-4 text-purple-400 flex-shrink-0" />
+        <div className="px-4 py-2 bg-[#121318] border-b border-zinc-800 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2 text-zinc-200">
+            <Scale className="w-4 h-4 text-red-400 flex-shrink-0" />
             <span>
               <strong>Quorum Deliberation:</strong> Gemini 3.5 Pro • Claude 3.5 Sonnet • GPT-4o • DeepSeek R1 • Llama 3.3 • Mistral Large
             </span>
           </div>
-          <div className="hidden sm:flex items-center gap-1.5 text-[11px] font-mono text-purple-300">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="hidden sm:flex items-center gap-1.5 text-[11px] font-mono text-zinc-400">
+            <ShieldCheck className="w-3.5 h-3.5 text-red-400" />
             <span>Consensus Synthesizer Active</span>
           </div>
         </div>
@@ -856,12 +880,12 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
               {/* Avatar */}
               <div className="flex-shrink-0 pt-0.5">
                 {isUser ? (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-slate-950 font-bold text-xs shadow-md">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-red-600 to-red-700 flex items-center justify-center text-white font-bold text-xs shadow-md shadow-red-950/40">
                     U
                   </div>
                 ) : isCouncil ? (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 via-indigo-600 to-pink-600 flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
-                    <Scale className="w-4 h-4" />
+                  <div className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-red-400 shadow-md">
+                    <Scale className="w-4 h-4 text-red-400" />
                   </div>
                 ) : (
                   <HoloOrb phase="idle" className="w-8 h-8" />
@@ -872,30 +896,30 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
               <div
                 className={`rounded-2xl p-4 text-xs md:text-sm leading-relaxed ${
                   isUser
-                    ? 'bg-gradient-to-r from-cyan-600 to-blue-700 text-white shadow-md'
+                    ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-md shadow-red-950/40'
                     : isCouncil
-                    ? 'bg-[#0d0f1c] border border-purple-500/40 text-slate-200 shadow-xl'
-                    : 'bg-[#0e1220] border border-slate-800 text-slate-200 shadow-lg'
+                    ? 'bg-[#121318] border border-zinc-800 text-zinc-100 shadow-xl'
+                    : 'bg-[#121318] border border-zinc-800 text-zinc-100 shadow-lg'
                 }`}
               >
                 {/* Header label for AI responses */}
                 {!isUser && (
-                  <div className="flex items-center justify-between border-b border-slate-800/80 pb-2 mb-2 text-xs">
+                  <div className="flex items-center justify-between border-b border-zinc-800 pb-2 mb-2 text-xs">
                     <div className="flex items-center gap-1.5">
                       {isCouncil ? (
                         <>
-                          <Award className="w-4 h-4 text-purple-400" />
-                          <span className="font-bold text-purple-300">Unified Council Quorum Verdict</span>
+                          <Award className="w-4 h-4 text-red-400" />
+                          <span className="font-bold text-zinc-100">Unified Council Quorum Verdict</span>
                           {msg.councilData && (
-                            <span className="px-2 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-800 text-[10px] font-mono">
+                            <span className="px-2 py-0.5 rounded-full bg-red-950/60 text-red-400 border border-red-800/50 text-[10px] font-mono">
                               {msg.councilData.consensusScore}% Consensus
                             </span>
                           )}
                         </>
                       ) : (
                         <>
-                          <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                          <span className="font-bold text-cyan-300">Omni Shadow Intelligence</span>
+                          <Sparkles className="w-3.5 h-3.5 text-red-400" />
+                          <span className="font-bold text-zinc-100">Omni Shadow Intelligence</span>
                         </>
                       )}
                     </div>
@@ -903,10 +927,10 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => copyToClipboard(msg.text, msg.id)}
-                        className="text-slate-400 hover:text-white transition-all"
+                        className="text-zinc-400 hover:text-white transition-all"
                         title="Copy text"
                       >
-                        {copiedId === msg.id ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                        {copiedId === msg.id ? <Check className="w-3.5 h-3.5 text-red-400" /> : <Copy className="w-3.5 h-3.5" />}
                       </button>
                       {onSaveToVault && (
                         <button
@@ -919,7 +943,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                               createdAt: new Date().toISOString(),
                             });
                           }}
-                          className="text-slate-400 hover:text-cyan-400 transition-all"
+                          className="text-zinc-400 hover:text-red-400 transition-all"
                           title="Save to Vault"
                         >
                           <FolderLock className="w-3.5 h-3.5" />
@@ -936,14 +960,14 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
 
                 {/* Council Deliberation Matrix Expandable Cards */}
                 {isCouncil && msg.councilData?.modelAnswers && (
-                  <div className="mt-4 pt-3 border-t border-purple-900/50 space-y-2">
+                  <div className="mt-4 pt-3 border-t border-zinc-800 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-mono uppercase tracking-wider text-purple-300 font-bold">
+                      <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-300 font-bold">
                         Individual LLM Deliberations ({msg.councilData.modelAnswers.length} Models)
                       </span>
                       <button
                         onClick={() => toggleCouncilCard(msg.id)}
-                        className="text-[11px] text-purple-400 hover:text-purple-300 flex items-center gap-1 font-semibold"
+                        className="text-[11px] text-red-400 hover:text-red-300 flex items-center gap-1 font-semibold"
                       >
                         {expandedCouncilCards[msg.id] ? 'Collapse Perspectives' : 'Inspect All Perspectives'}
                         {expandedCouncilCards[msg.id] ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -955,26 +979,26 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                         {msg.councilData.modelAnswers.map((model, idx) => (
                           <div
                             key={idx}
-                            className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-1.5"
+                            className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 space-y-1.5"
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-1.5">
                                 <span className="font-bold text-white text-xs">{model.modelName}</span>
-                                <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-950/80 text-purple-300 border border-purple-800">
+                                <span className="text-[9px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
                                   {model.roleBadge}
                                 </span>
                               </div>
                               <span
                                 className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${
                                   model.status === 'connected'
-                                    ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
-                                    : 'bg-amber-950 text-amber-400 border border-amber-800'
+                                    ? 'bg-red-950/60 text-red-400 border border-red-800/40'
+                                    : 'bg-zinc-800 text-zinc-400 border border-zinc-700'
                                 }`}
                               >
                                 {model.status === 'connected' ? 'Active Direct' : 'Simulated Fallback'}
                               </span>
                             </div>
-                            <p className="text-xs text-slate-300 leading-relaxed italic">
+                            <p className="text-xs text-zinc-300 leading-relaxed italic">
                               "{model.answer}"
                             </p>
                           </div>
@@ -985,7 +1009,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                 )}
 
                 <div className="mt-2 text-right">
-                  <span className="text-[10px] text-slate-500 font-mono">{msg.timestamp}</span>
+                  <span className="text-[10px] text-zinc-500 font-mono">{msg.timestamp}</span>
                 </div>
               </div>
             </div>
@@ -995,8 +1019,8 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
         {isGenerating && (
           <div className="flex gap-3 max-w-2xl">
             <HoloOrb phase="processing" className="w-8 h-8 flex-shrink-0" />
-            <div className="rounded-2xl p-4 bg-[#0e1220] border border-cyan-500/40 text-xs text-cyan-300 flex items-center gap-2 shadow-lg">
-              <RefreshCw className="w-4 h-4 animate-spin text-cyan-400" />
+            <div className="rounded-2xl p-4 bg-[#121318] border border-red-600/40 text-xs text-red-300 flex items-center gap-2 shadow-lg">
+              <RefreshCw className="w-4 h-4 animate-spin text-red-400" />
               <span>
                 {activeMode === 'council'
                   ? 'Council gathering perspectives from 6 LLMs and synthesizing quorum consensus...'
@@ -1010,8 +1034,8 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
       </div>
 
       {/* Suggested Fast Prompts (Council or Normal) */}
-      <div className="px-4 py-1.5 bg-[#080a12] border-t border-slate-800/60 overflow-x-auto flex items-center gap-2 flex-shrink-0">
-        <span className="text-[10px] uppercase font-mono text-slate-500 font-semibold mr-1 hidden sm:inline">
+      <div className="px-4 py-1.5 bg-[#0a0a0c] border-t border-zinc-800/80 overflow-x-auto flex items-center gap-2 flex-shrink-0">
+        <span className="text-[10px] uppercase font-mono text-zinc-500 font-semibold mr-1 hidden sm:inline">
           PROMPTS:
         </span>
         {(activeMode === 'council'
@@ -1031,7 +1055,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
           <button
             key={idx}
             onClick={() => setInputText(preset)}
-            className="px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 hover:border-cyan-500/40 text-slate-400 hover:text-cyan-300 text-[11px] whitespace-nowrap transition-all"
+            className="px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 hover:border-red-500/40 text-zinc-400 hover:text-zinc-200 text-[11px] whitespace-nowrap transition-all"
           >
             {preset}
           </button>
@@ -1039,15 +1063,15 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
       </div>
 
       {/* Input Area */}
-      <div className="p-3 bg-[#0a0d16] border-t border-slate-800 flex-shrink-0 space-y-2">
+      <div className="p-3 bg-[#0a0a0c] border-t border-zinc-800 flex-shrink-0 space-y-2">
         {/* Attached image preview */}
         {attachedImage && (
-          <div className="flex items-center gap-2 p-2 rounded-lg bg-slate-900 border border-slate-800 w-max">
+          <div className="flex items-center gap-2 p-2 rounded-lg bg-zinc-900 border border-zinc-800 w-max">
             <img src={attachedImage} alt="attachment" className="w-10 h-10 object-cover rounded" />
-            <span className="text-xs text-slate-300">Image attached for vision analysis</span>
+            <span className="text-xs text-zinc-300">Image attached for vision analysis</span>
             <button
               onClick={() => setAttachedImage(null)}
-              className="text-xs text-rose-400 hover:text-rose-300 font-bold px-1"
+              className="text-xs text-red-400 hover:text-red-300 font-bold px-1"
             >
               ✕
             </button>
@@ -1055,19 +1079,19 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
         )}
         {/* Actual Request Error Banner with Retry button (No canned mock responses) */}
         {chatError && (
-          <div className="p-3 bg-rose-950/80 border border-rose-500/50 rounded-xl flex items-center justify-between gap-3 text-xs text-rose-200 shadow-xl animate-in fade-in">
+          <div className="p-3 bg-red-950/80 border border-red-500/50 rounded-xl flex items-center justify-between gap-3 text-xs text-red-200 shadow-xl animate-in fade-in">
             <div className="flex items-center gap-2 overflow-hidden flex-1">
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+              <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
               <div className="overflow-hidden">
-                <span className="font-bold text-rose-300">Request Error: </span>
-                <span className="font-mono text-rose-200 truncate">{chatError}</span>
+                <span className="font-bold text-red-300">Request Error: </span>
+                <span className="font-mono text-red-200 truncate">{chatError}</span>
               </div>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <button
                 type="button"
                 onClick={handleRetry}
-                className="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-sm active:scale-95"
+                className="px-2.5 py-1 rounded-lg bg-red-600 hover:bg-red-500 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-sm active:scale-95"
                 title="Retry sending this prompt"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -1076,7 +1100,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
               <button
                 type="button"
                 onClick={() => setChatError(null)}
-                className="p-1 rounded text-rose-400 hover:text-white hover:bg-rose-900/40"
+                className="p-1 rounded text-red-400 hover:text-white hover:bg-red-900/40"
                 title="Dismiss error"
               >
                 <X className="w-3.5 h-3.5" />
@@ -1097,7 +1121,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
           />
           <button
             onClick={() => audioFileInputRef.current?.click()}
-            className="p-2.5 rounded-xl border border-slate-800 bg-slate-900/90 text-slate-400 hover:text-white hover:border-slate-700 transition-all flex items-center justify-center"
+            className="p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all flex items-center justify-center"
             title="Upload Audio File for Transcription"
           >
             <FileAudio className="w-4 h-4" />
@@ -1113,7 +1137,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
           />
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="p-2.5 rounded-xl border border-slate-800 bg-slate-900/90 text-slate-400 hover:text-white hover:border-slate-700 transition-all flex items-center justify-center"
+            className="p-2.5 rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all flex items-center justify-center"
             title="Attach Image for Vision Analysis"
           >
             <ImageIcon className="w-4 h-4" />
@@ -1135,12 +1159,12 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                   ? 'Ask the Council a hard question (runs across all 6 LLMs)...'
                   : 'Message Omni (or record your voice)...'
               }
-              className={`w-full py-2.5 pl-3 pr-24 rounded-xl bg-slate-950 border text-xs md:text-sm text-slate-100 placeholder-slate-500 focus:outline-none transition-all ${
+              className={`w-full py-2.5 pl-3 pr-24 rounded-xl bg-black border text-xs md:text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none transition-all ${
                 isRecording
-                  ? 'border-purple-500 ring-2 ring-purple-500/30'
+                  ? 'border-red-500 ring-2 ring-red-500/30'
                   : isTranscribing
-                  ? 'border-cyan-500 ring-2 ring-cyan-500/30 animate-pulse'
-                  : 'border-slate-800 focus:border-cyan-500'
+                  ? 'border-red-500 ring-2 ring-red-500/30 animate-pulse'
+                  : 'border-zinc-800 focus:border-red-500'
               }`}
             />
 
@@ -1150,7 +1174,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
               {inputText.trim() && (
                 <button
                   onClick={handleEnhancePrompt}
-                  className="p-1 rounded text-cyan-400 hover:bg-cyan-950/60 transition-all"
+                  className="p-1 rounded text-red-400 hover:bg-red-950/60 transition-all"
                   title="Enhance prompt with Omni Engine"
                 >
                   <Sparkles className="w-4 h-4" />
@@ -1162,8 +1186,8 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                 onClick={toggleRecording}
                 className={`p-1.5 rounded-lg transition-all ${
                   isRecording
-                    ? 'bg-red-500 text-white animate-pulse shadow-md shadow-red-500/50'
-                    : 'text-slate-400 hover:text-cyan-400 hover:bg-slate-800'
+                    ? 'bg-red-600 text-white animate-pulse shadow-md shadow-red-600/50'
+                    : 'text-zinc-400 hover:text-red-400 hover:bg-zinc-800'
                 }`}
                 title={isRecording ? 'Stop Recording' : 'Record voice to transcribe'}
               >
@@ -1176,11 +1200,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
           <button
             onClick={() => handleSendMessage()}
             disabled={(!inputText.trim() && !attachedImage) || isGenerating}
-            className={`p-2.5 rounded-xl font-bold flex items-center justify-center transition-all ${
-              activeMode === 'council'
-                ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:brightness-110 shadow-md shadow-purple-500/30'
-                : 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 hover:brightness-110 shadow-md shadow-cyan-500/30'
-            } disabled:opacity-40 disabled:pointer-events-none active:scale-95`}
+            className="p-2.5 rounded-xl font-bold flex items-center justify-center transition-all bg-gradient-to-r from-red-600 to-red-700 text-white hover:brightness-110 shadow-md shadow-red-600/30 disabled:opacity-40 disabled:pointer-events-none active:scale-95"
           >
             <Send className="w-4 h-4" />
           </button>
@@ -1210,11 +1230,11 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
           />
 
           {/* Drawer Content */}
-          <div className="relative w-80 max-w-[85vw] h-full bg-[#0a0d18] border-r border-slate-800 flex flex-col z-10 shadow-2xl animate-in slide-in-from-left duration-200">
+          <div className="relative w-80 max-w-[85vw] h-full bg-[#0a0a0c] border-r border-zinc-800 flex flex-col z-10 shadow-2xl animate-in slide-in-from-left duration-200">
             {/* Drawer Header */}
-            <div className="p-3 bg-[#07090f] border-b border-slate-800 flex items-center justify-between">
+            <div className="p-3 bg-[#121318] border-b border-zinc-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <History className="w-4 h-4 text-cyan-400" />
+                <History className="w-4 h-4 text-red-500" />
                 <h3 className="font-bold text-xs text-white uppercase tracking-wider font-mono">
                   Conversations
                 </h3>
@@ -1222,14 +1242,14 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
               <div className="flex items-center gap-1">
                 <button
                   onClick={handleNewThread}
-                  className="p-1.5 rounded-lg bg-cyan-950/60 border border-cyan-500/40 text-cyan-300 hover:text-white transition"
+                  className="p-1.5 rounded-lg bg-red-950/60 border border-red-600/40 text-red-300 hover:text-white transition"
                   title="New Conversation"
                 >
                   <Plus className="w-3.5 h-3.5" />
                 </button>
                 <button
                   onClick={() => setIsThreadsDrawerOpen(false)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-white transition"
+                  className="p-1.5 rounded-lg text-zinc-400 hover:text-white transition"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -1238,18 +1258,18 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
 
             {/* Search Filter */}
             {threads.length > 0 && (
-              <div className="p-2 border-b border-slate-800/80">
-                <div className="flex items-center gap-1.5 bg-[#05060b] border border-slate-800 rounded-lg px-2 py-1 text-xs">
-                  <Search className="w-3.5 h-3.5 text-slate-500" />
+              <div className="p-2 border-b border-zinc-800">
+                <div className="flex items-center gap-1.5 bg-black border border-zinc-800 rounded-lg px-2 py-1 text-xs">
+                  <Search className="w-3.5 h-3.5 text-zinc-500" />
                   <input
                     type="text"
                     value={threadsSearchQuery}
                     onChange={(e) => setThreadsSearchQuery(e.target.value)}
                     placeholder="Search conversations..."
-                    className="bg-transparent border-0 text-slate-200 placeholder-slate-600 focus:outline-none text-xs w-full font-mono"
+                    className="bg-transparent border-0 text-zinc-200 placeholder-zinc-600 focus:outline-none text-xs w-full font-mono"
                   />
                   {threadsSearchQuery && (
-                    <button onClick={() => setThreadsSearchQuery('')} className="text-slate-500 hover:text-white">
+                    <button onClick={() => setThreadsSearchQuery('')} className="text-zinc-500 hover:text-white">
                       ×
                     </button>
                   )}
@@ -1261,25 +1281,25 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
             <div className="flex-1 overflow-y-auto p-2 space-y-1">
               {!supabaseUser ? (
                 <div className="p-4 text-center space-y-3">
-                  <div className="w-10 h-10 rounded-xl bg-cyan-950/40 border border-cyan-500/30 flex items-center justify-center mx-auto text-cyan-400">
+                  <div className="w-10 h-10 rounded-xl bg-red-950/40 border border-red-600/30 flex items-center justify-center mx-auto text-red-400">
                     <Lock className="w-5 h-5" />
                   </div>
-                  <h4 className="text-xs font-bold text-white">Cloud Sync Available</h4>
-                  <p className="text-[11px] text-slate-400 leading-relaxed">
-                    Sign in with your Supabase account to sync your conversation threads and private memory between phone and web.
+                  <h4 className="text-xs font-bold text-white">Cloud Sync Active</h4>
+                  <p className="text-[11px] text-zinc-400 leading-relaxed">
+                    Conversations automatically persist across sessions via Firebase and Supabase cloud integrations.
                   </p>
                   <button
                     onClick={() => {
                       setIsThreadsDrawerOpen(false);
                       setIsAuthModalOpen(true);
                     }}
-                    className="w-full py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold text-xs shadow-md shadow-cyan-500/20 active:scale-95 transition"
+                    className="w-full py-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-bold text-xs shadow-md shadow-red-600/20 active:scale-95 transition"
                   >
-                    Sign In with Supabase
+                    Manage Cloud Account
                   </button>
                 </div>
               ) : threads.length === 0 ? (
-                <div className="p-6 text-center text-xs text-slate-500 font-mono">
+                <div className="p-6 text-center text-xs text-zinc-500 font-mono">
                   No conversations yet. Send a message to start your first thread!
                 </div>
               ) : (
@@ -1297,8 +1317,8 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                         key={t.id}
                         className={`group relative rounded-xl p-2.5 transition-all text-xs flex items-center justify-between gap-2 ${
                           isActive
-                            ? 'bg-cyan-950/50 border border-cyan-500/40 text-cyan-200'
-                            : 'bg-black/40 border border-slate-800/80 hover:border-slate-700 text-slate-300 hover:text-white'
+                            ? 'bg-red-950/40 border border-red-600/40 text-red-200'
+                            : 'bg-[#121318] border border-zinc-800 hover:border-zinc-700 text-zinc-300 hover:text-white'
                         }`}
                       >
                         {isEditing ? (
@@ -1312,17 +1332,17 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                                 if (e.key === 'Escape') setEditingThreadId(null);
                               }}
                               autoFocus
-                              className="bg-black border border-cyan-500 rounded px-2 py-1 text-xs text-white w-full focus:outline-none"
+                              className="bg-black border border-red-500 rounded px-2 py-1 text-xs text-white w-full focus:outline-none"
                             />
                             <button
                               onClick={() => handleRenameThread(t.id, editingTitle)}
-                              className="p-1 rounded bg-cyan-500 text-slate-950 font-bold"
+                              className="p-1 rounded bg-red-600 text-white font-bold"
                             >
                               <Check className="w-3 h-3" />
                             </button>
                             <button
                               onClick={() => setEditingThreadId(null)}
-                              className="p-1 rounded text-slate-400 hover:text-white"
+                              className="p-1 rounded text-zinc-400 hover:text-white"
                             >
                               <X className="w-3 h-3" />
                             </button>
@@ -1334,7 +1354,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                               className="flex-1 min-w-0 cursor-pointer"
                             >
                               <p className="font-medium truncate leading-snug">{t.title}</p>
-                              <p className="text-[10px] text-slate-500 font-mono mt-0.5">
+                              <p className="text-[10px] text-zinc-500 font-mono mt-0.5">
                                 {new Date(t.updated_at).toLocaleDateString([], {
                                   month: 'short',
                                   day: 'numeric',
@@ -1349,7 +1369,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                                   setEditingThreadId(t.id);
                                   setEditingTitle(t.title);
                                 }}
-                                className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-cyan-300"
+                                className="p-1 rounded hover:bg-zinc-800 text-zinc-400 hover:text-red-400"
                                 title="Rename thread"
                               >
                                 <Edit2 className="w-3 h-3" />
@@ -1364,8 +1384,8 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                                     setTimeout(() => setConfirmDeleteId(null), 3000);
                                   }
                                 }}
-                                className={`p-1 rounded hover:bg-slate-800 ${
-                                  confirmDeleteId === t.id ? 'text-red-400 font-bold' : 'text-slate-400 hover:text-red-400'
+                                className={`p-1 rounded hover:bg-zinc-800 ${
+                                  confirmDeleteId === t.id ? 'text-red-400 font-bold' : 'text-zinc-400 hover:text-red-400'
                                 }`}
                                 title={confirmDeleteId === t.id ? 'Click again to confirm delete' : 'Delete thread'}
                               >
@@ -1382,16 +1402,16 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
 
             {/* Drawer Footer Account Area */}
             {supabaseUser && (
-              <div className="p-3 border-t border-slate-800 bg-[#07090f] flex items-center justify-between text-xs">
+              <div className="p-3 border-t border-zinc-800 bg-[#121318] flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2 truncate">
-                  <div className="w-6 h-6 rounded-full bg-emerald-950 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold text-[10px]">
+                  <div className="w-6 h-6 rounded-full bg-red-950 border border-red-600/40 text-red-400 flex items-center justify-center font-bold text-[10px]">
                     {supabaseUser.email?.charAt(0).toUpperCase()}
                   </div>
-                  <span className="truncate text-slate-300 font-mono text-[11px]">{supabaseUser.email}</span>
+                  <span className="truncate text-zinc-300 font-mono text-[11px]">{supabaseUser.email}</span>
                 </div>
                 <button
                   onClick={handleSignOut}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-800 transition"
+                  className="p-1.5 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-zinc-800 transition"
                   title="Sign out of Supabase"
                 >
                   <LogOut className="w-3.5 h-3.5" />
@@ -1404,21 +1424,21 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
 
       {/* SUPABASE AUTH MODAL */}
       {isAuthModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in">
-          <div className="relative w-full max-w-sm bg-[#090c16] border border-cyan-500/40 rounded-2xl p-5 shadow-2xl space-y-4 font-sans">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 animate-in fade-in">
+          <div className="relative w-full max-w-sm bg-[#0a0a0c] border border-zinc-800 rounded-2xl p-5 shadow-2xl space-y-4 font-sans">
+            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-cyan-950/60 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold text-xs">
+                <div className="w-7 h-7 rounded-lg bg-red-950/60 border border-red-600/40 flex items-center justify-center text-red-400 font-bold text-xs">
                   ⚡
                 </div>
                 <div>
                   <h3 className="font-bold text-sm text-white">OmniAI Account Sync</h3>
-                  <p className="text-[10px] font-mono text-slate-400">Powered by shared Supabase database</p>
+                  <p className="text-[10px] font-mono text-zinc-400">Firebase & Supabase Cloud Storage</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsAuthModalOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-white"
+                className="p-1 rounded-lg text-zinc-400 hover:text-white"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1426,17 +1446,17 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
 
             {supabaseUser ? (
               <div className="space-y-4">
-                <div className="p-3 rounded-xl bg-black/60 border border-emerald-500/30 space-y-2">
-                  <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>Connected to Supabase</span>
+                <div className="p-3 rounded-xl bg-black border border-zinc-800 space-y-2">
+                  <div className="flex items-center gap-2 text-red-400 text-xs font-bold">
+                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                    <span>Cloud Sync Active</span>
                   </div>
-                  <p className="text-xs text-slate-200">
+                  <p className="text-xs text-zinc-200">
                     Signed in as: <strong className="text-white font-mono">{supabaseUser.email}</strong>
                   </p>
-                  <p className="text-[10px] text-slate-400 font-mono truncate">ID: {supabaseUser.id}</p>
-                  <p className="text-[11px] text-slate-400">
-                    Conversations, threads, and private memory are synced with your web workspace.
+                  <p className="text-[10px] text-zinc-400 font-mono truncate">ID: {supabaseUser.id}</p>
+                  <p className="text-[11px] text-zinc-400">
+                    Conversations, threads, and private memory are synced with your cloud workspace.
                   </p>
                 </div>
 
@@ -1446,13 +1466,13 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                       setIsAuthModalOpen(false);
                       setIsThreadsDrawerOpen(true);
                     }}
-                    className="flex-1 py-2 rounded-xl bg-slate-800 text-slate-200 hover:text-white text-xs font-semibold transition"
+                    className="flex-1 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 hover:text-white text-xs font-semibold transition"
                   >
                     View Threads
                   </button>
                   <button
                     onClick={handleSignOut}
-                    className="px-4 py-2 rounded-xl bg-red-950/40 border border-red-500/40 text-red-300 hover:bg-red-900/50 text-xs font-bold transition flex items-center gap-1.5"
+                    className="px-4 py-2 rounded-xl bg-red-950/40 border border-red-600/40 text-red-300 hover:bg-red-900/50 text-xs font-bold transition flex items-center gap-1.5"
                   >
                     <LogOut className="w-3.5 h-3.5" />
                     <span>Sign Out</span>
@@ -1462,7 +1482,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
             ) : (
               <form onSubmit={handleAuthSubmit} className="space-y-3">
                 {/* Mode Selector */}
-                <div className="grid grid-cols-2 p-1 rounded-xl bg-black border border-slate-800 text-xs font-semibold">
+                <div className="grid grid-cols-2 p-1 rounded-xl bg-black border border-zinc-800 text-xs font-semibold">
                   <button
                     type="button"
                     onClick={() => {
@@ -1470,7 +1490,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                       setAuthError(null);
                     }}
                     className={`py-1.5 rounded-lg transition-all ${
-                      authMode === 'signin' ? 'bg-cyan-500 text-slate-950 font-bold' : 'text-slate-400'
+                      authMode === 'signin' ? 'bg-red-600 text-white font-bold shadow-sm' : 'text-zinc-400'
                     }`}
                   >
                     Sign In
@@ -1482,7 +1502,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                       setAuthError(null);
                     }}
                     className={`py-1.5 rounded-lg transition-all ${
-                      authMode === 'signup' ? 'bg-cyan-500 text-slate-950 font-bold' : 'text-slate-400'
+                      authMode === 'signup' ? 'bg-red-600 text-white font-bold shadow-sm' : 'text-zinc-400'
                     }`}
                   >
                     Create Account
@@ -1491,31 +1511,31 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
 
                 {authMode === 'signup' && (
                   <div>
-                    <label className="text-[11px] font-mono text-slate-300 block mb-1">Display Name</label>
+                    <label className="text-[11px] font-mono text-zinc-300 block mb-1">Display Name</label>
                     <input
                       type="text"
                       value={authDisplayName}
                       onChange={(e) => setAuthDisplayName(e.target.value)}
                       placeholder="Your name or callsign"
-                      className="w-full px-3 py-2 rounded-xl bg-black border border-slate-800 text-xs text-white focus:outline-none focus:border-cyan-500 font-mono"
+                      className="w-full px-3 py-2 rounded-xl bg-black border border-zinc-800 text-xs text-white focus:outline-none focus:border-red-500 font-mono"
                     />
                   </div>
                 )}
 
                 <div>
-                  <label className="text-[11px] font-mono text-slate-300 block mb-1">Email</label>
+                  <label className="text-[11px] font-mono text-zinc-300 block mb-1">Email</label>
                   <input
                     type="email"
                     required
                     value={authEmail}
                     onChange={(e) => setAuthEmail(e.target.value)}
                     placeholder="name@example.com"
-                    className="w-full px-3 py-2 rounded-xl bg-black border border-slate-800 text-xs text-white focus:outline-none focus:border-cyan-500 font-mono"
+                    className="w-full px-3 py-2 rounded-xl bg-black border border-zinc-800 text-xs text-white focus:outline-none focus:border-red-500 font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-mono text-slate-300 block mb-1">Password</label>
+                  <label className="text-[11px] font-mono text-zinc-300 block mb-1">Password</label>
                   <input
                     type="password"
                     required
@@ -1523,7 +1543,7 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                     value={authPassword}
                     onChange={(e) => setAuthPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full px-3 py-2 rounded-xl bg-black border border-slate-800 text-xs text-white focus:outline-none focus:border-cyan-500 font-mono"
+                    className="w-full px-3 py-2 rounded-xl bg-black border border-zinc-800 text-xs text-white focus:outline-none focus:border-red-500 font-mono"
                   />
                 </div>
 
@@ -1536,12 +1556,12 @@ export const OmniChatAndCouncil: React.FC<OmniChatAndCouncilProps> = ({ onSaveTo
                 <button
                   type="submit"
                   disabled={authLoading}
-                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-cyan-500/20 active:scale-95 transition disabled:opacity-50"
+                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-red-600/20 active:scale-95 transition disabled:opacity-50"
                 >
                   {authLoading ? (
                     <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                   ) : (
-                    <span>{authMode === 'signin' ? 'Sign In to OmniAI' : 'Create Supabase Account'}</span>
+                    <span>{authMode === 'signin' ? 'Sign In to OmniAI' : 'Create Cloud Account'}</span>
                   )}
                 </button>
               </form>
