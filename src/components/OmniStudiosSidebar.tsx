@@ -20,7 +20,8 @@ import {
   Settings,
   FolderLock,
   MessageSquare,
-  Bot
+  Bot,
+  Cloud
 } from 'lucide-react';
 import { StudioId } from './OmniStudiosView';
 import { HoloOrb } from './HoloOrb';
@@ -34,6 +35,7 @@ interface OmniStudiosSidebarProps {
   onOpenSettings?: () => void;
   onOpenIdentity?: () => void;
   onOpenVault?: () => void;
+  onOpenWorkspace?: () => void;
 }
 
 export const OmniStudiosSidebar: React.FC<OmniStudiosSidebarProps> = ({
@@ -45,6 +47,7 @@ export const OmniStudiosSidebar: React.FC<OmniStudiosSidebarProps> = ({
   onOpenSettings,
   onOpenIdentity,
   onOpenVault,
+  onOpenWorkspace,
 }) => {
   if (!isOpen) return null;
 
@@ -217,6 +220,23 @@ export const OmniStudiosSidebar: React.FC<OmniStudiosSidebarProps> = ({
             <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400" />
           </button>
 
+          {/* Google Workspace Authorization Workflow Dock */}
+          {onOpenWorkspace && (
+            <button
+              onClick={() => {
+                onClose();
+                onOpenWorkspace();
+              }}
+              className="w-full py-2 px-3 rounded-xl bg-blue-950/20 border border-blue-800/30 hover:border-blue-500/50 text-blue-300 text-xs font-medium flex items-center justify-between transition-all"
+            >
+              <div className="flex items-center gap-2">
+                <Cloud className="w-3.5 h-3.5 text-blue-400" />
+                <span>Google Workspace Auth</span>
+              </div>
+              <span className="text-[9px] font-mono text-blue-400/80">Drive • Mail • Keep</span>
+            </button>
+          )}
+
           {/* Vault Quick Access */}
           {onOpenVault && (
             <button
@@ -233,6 +253,13 @@ export const OmniStudiosSidebar: React.FC<OmniStudiosSidebarProps> = ({
               <span className="text-[9px] font-mono text-purple-400/80">Shared</span>
             </button>
           )}
+
+          {/* Corporate Attribution Baseline Indicator */}
+          <div className="pt-2.5 pb-1 text-center border-t border-zinc-800/80">
+            <span className="text-[10px] font-mono text-zinc-400 tracking-wider">
+              Powered by Dark Misfit Studios
+            </span>
+          </div>
         </div>
 
       </div>

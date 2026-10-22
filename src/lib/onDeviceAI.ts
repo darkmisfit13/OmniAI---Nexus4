@@ -31,6 +31,7 @@ export interface DualLaneAnalysisResult {
     witty: string;
     rawHonest: string;
     directAction: string;
+    flirty: string;
   };
   suggestedReplies: string[];
   tacticalAdvice: string[];
@@ -89,6 +90,7 @@ class DualLaneNeuralEngine {
       witty: 'Reading between the lines. Let’s not overcomplicate what we both know.',
       rawHonest: 'I’d rather be upfront than pretend this isn’t pressing. Here is the unvarnished reality.',
       directAction: 'Locking this down right now. You’ll have the confirmation shortly.',
+      flirty: 'You always know how to make an entrance. Let’s make this interesting.',
     };
 
     // Scenario 1: Work / Technical Pressure
@@ -113,6 +115,7 @@ class DualLaneNeuralEngine {
         witty: 'Staging compiles clean. Unless the datacenter melts, we are live at 11:00 AM.',
         rawHonest: 'We paused to isolate an auth regression before the client demo. Patch is in, live in 15m.',
         directAction: 'Regression suite passed locally. Pushing build #402 to staging in 15 minutes flat.',
+        flirty: 'Are you this demanding with everyone, or do I just get the executive VIP treatment? Pushing build #402 in 15m.',
       };
 
       telemetryNotes.push(
@@ -153,6 +156,7 @@ class DualLaneNeuralEngine {
         witty: 'Nobody likes mystery math on an invoice. Pulling the itemized ledger right now to fix it.',
         rawHonest: 'You trusted us with billing; a rogue charge breaks that. I am inspecting it right now to credit it.',
         directAction: 'Hi Sarah, pulling invoice #8819 with our finance lead now. We will clarify or credit it today.',
+        flirty: 'Nobody likes mystery math, Sarah. Let me handle this personally for you—consider it resolved today.',
       };
 
       telemetryNotes.push(
@@ -193,6 +197,7 @@ class DualLaneNeuralEngine {
         witty: 'Cold takeout standing in the refrigerator light at 1 AM hits different. Fight me on it.',
         rawHonest: 'Cereal is technically cold soup, and brunch is just an excuse to charge $28 for eggs.',
         directAction: 'I put hot honey on literally everything. Tell me your worst food sin so I can judge accordingly.',
+        flirty: 'Cold takeout at 1 AM. But if you play your cards right, maybe I’ll let you steal some of my fries.',
       };
 
       telemetryNotes.push(
@@ -218,6 +223,7 @@ class DualLaneNeuralEngine {
         witty: 'Short answer: yes. Long answer: absolutely, let’s make it happen.',
         rawHonest: 'Let’s be real about where this stands so we don’t waste time on friction.',
         directAction: 'Understood. Reviewing the specs now and executing immediately.',
+        flirty: 'You always ask the questions that keep things exciting. Let’s do this.',
       };
 
       telemetryNotes.push(
@@ -232,9 +238,10 @@ class DualLaneNeuralEngine {
     }
 
     const suggestedReplies = [
-      suggestionTrio.witty,
-      suggestionTrio.rawHonest,
       suggestionTrio.directAction,
+      suggestionTrio.rawHonest,
+      suggestionTrio.witty,
+      suggestionTrio.flirty,
     ];
 
     return {
@@ -375,6 +382,7 @@ class DualLaneNeuralEngine {
         }
         break;
       }
+      case 'bullets':
       case 'bulletize': {
         if (!clean) {
           result = '• Action item 1\n• Action item 2\n• Deliverable verification';
@@ -388,6 +396,15 @@ class DualLaneNeuralEngine {
           } else {
             result = `• ${clean}`;
           }
+        }
+        break;
+      }
+      case 'quick-answers':
+      case 'quickAnswers': {
+        if (!clean) {
+          result = 'Understood. Reviewing now and confirming deployment target within 15 minutes.';
+        } else {
+          result = `Acknowledged: "${clean}". On track and executing immediate next steps.`;
         }
         break;
       }

@@ -181,41 +181,23 @@ export const SimulatedAppView: React.FC<SimulatedAppViewProps> = ({
             <span className={`w-2 h-2 rounded-full ${isLiveWatching ? 'bg-red-500 animate-ping' : 'bg-zinc-600'}`} />
             <span>{isLiveWatching ? 'OmniAI Cognition Active' : 'Watching Paused'}</span>
           </button>
-
-          {/* Cognitive Intent Stream Tag */}
-          <div 
-            onClick={() => setShowCognitionDetail(!showCognitionDetail)}
-            className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-zinc-900 border border-zinc-800 text-[10px] text-zinc-300 hover:border-red-500/40 cursor-pointer truncate max-w-[210px]"
-            title="Click for live cognition dossier"
-          >
-            <Activity className="w-3 h-3 text-red-400 shrink-0" />
-            <span className="truncate text-zinc-300">{currentScenario.contextHint.slice(0, 36)}...</span>
-          </div>
         </div>
 
-        {/* Live Call Trigger & Auto Persona Quick Access */}
+        {/* Compact interactive pill badge pinned to the side: Cognition Dossier */}
         <div className="flex items-center gap-1.5">
-          {onOpenLiveCall && (
-            <button
-              onClick={onOpenLiveCall}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-600/20 text-red-300 border border-red-500/50 hover:bg-red-600/30 text-[10px] font-bold transition shadow-[0_0_10px_rgba(220,38,38,0.3)] animate-pulse"
-              title="Launch Live Real-Time Phone Call Mode with Voice Cloning Takeover"
-            >
-              <Phone className="w-3 h-3 text-red-400" />
-              <span>Live Call</span>
-            </button>
-          )}
-
-          {onOpenAutoPilotSetup && (
-            <button
-              onClick={onOpenAutoPilotSetup}
-              className="flex items-center gap-1 px-2 py-1 rounded-full bg-zinc-900 text-zinc-300 border border-zinc-800 hover:border-red-500/40 hover:text-white text-[10px] font-bold transition"
-              title="Configure Train Like Me & Voice Cloning"
-            >
-              <Zap className="w-3 h-3 text-red-400" />
-              <span className="hidden xs:inline">Persona</span>
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => setShowCognitionDetail(!showCognitionDetail)}
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold transition shadow-sm ${
+              showCognitionDetail
+                ? 'bg-red-600 text-white shadow-[0_0_10px_rgba(220,38,38,0.4)]'
+                : 'bg-zinc-900 border border-zinc-800 text-red-400 hover:border-red-500/50 hover:text-white'
+            }`}
+            title="Open Live Cognition Dossier (Speaker & Tactical Strategy)"
+          >
+            <Activity className="w-3 h-3 text-red-400" />
+            <span>Cognition Dossier</span>
+          </button>
         </div>
       </div>
 
@@ -272,7 +254,7 @@ export const SimulatedAppView: React.FC<SimulatedAppViewProps> = ({
           <button
             onClick={onSimulateIncomingMessage}
             className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-mono font-bold whitespace-nowrap bg-red-600/15 text-red-300 border border-red-500/40 hover:bg-red-600/25 transition shadow-[0_0_12px_rgba(220,38,38,0.2)]"
-            title="Trigger an incoming message from the counterpart to see Omni Key calculate and answer for you"
+            title="Trigger an incoming message from the counterpart to see OmniAI calculate and answer for you"
           >
             <Zap className="w-3 h-3 text-red-400 animate-pulse" />
             <span>+ Incoming Msg</span>
@@ -338,7 +320,7 @@ export const SimulatedAppView: React.FC<SimulatedAppViewProps> = ({
               </div>
             </div>
             <p className="text-[10px] font-mono text-red-400 mt-2 flex items-center gap-1">
-              <Sparkles className="w-3 h-3" /> Omni Cognition actively parsing uploaded viewport
+              <Sparkles className="w-3 h-3" /> OmniAI Cognition actively parsing uploaded viewport
             </p>
           </div>
         ) : (
