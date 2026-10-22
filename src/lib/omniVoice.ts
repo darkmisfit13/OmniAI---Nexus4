@@ -46,6 +46,145 @@ export const defaultClonedVoiceProfile: ClonedVoiceProfile = {
   },
 };
 
+// Omni Voice Realism Optimization & Human Conversation Parameters
+export interface VocalRealismSettings {
+  stability: number;           // 0.40: Lower stability introduces natural human vocal inflection and drift
+  similarity_boost: number;    // 0.75: Maintains clear speaker identity
+  style_exaggeration: number;  // 0.50: Forces dramatic conversational energy variance
+  speaker_boost: boolean;      // true: Enhances vocal projection and presence
+}
+
+export const defaultVocalRealismSettings: VocalRealismSettings = {
+  stability: 0.40,
+  similarity_boost: 0.75,
+  style_exaggeration: 0.50,
+  speaker_boost: true,
+};
+
+// Helper: Converts common numbers (0-999) to spoken words
+function smallNumberToWords(n: number): string {
+  const units = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 
+                 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+  const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+
+  if (n < 20) return units[n];
+  if (n < 100) {
+    const rem = n % 10;
+    return rem === 0 ? tens[Math.floor(n / 10)] : `${tens[Math.floor(n / 10)]}-${units[rem]}`;
+  }
+  if (n < 1000) {
+    const h = Math.floor(n / 100);
+    const rem = n % 100;
+    return rem === 0 ? `${units[h]} hundred` : `${units[h]} hundred ${smallNumberToWords(rem)}`;
+  }
+  return String(n);
+}
+
+/**
+ * Middleware: Prepares text for speech synthesis to mimic real human conversation:
+ * 1. Converts numbers and symbols to fully written words (e.g. "1st" -> "first", "$" -> "dollars")
+ * 2. Injects strategic ellipses (...) or pauses before long conjunctions ("because", "but", "although", etc.)
+ * 3. Replaces rigid, formal words with conversational contractions ("I am" -> "I'm", "do not" -> "don't")
+ */
+export function prepareTextForSpeech(inputText: string): string {
+  if (!inputText) return '';
+  let text = inputText;
+
+  // 1. Ordinals to spoken words
+  const ordinals: Record<string, string> = {
+    '1st': 'first', '2nd': 'second', '3rd': 'third', '4th': 'fourth', '5th': 'fifth',
+    '6th': 'sixth', '7th': 'seventh', '8th': 'eighth', '9th': 'ninth', '10th': 'tenth',
+    '11th': 'eleventh', '12th': 'twelfth', '13th': 'thirteenth', '14th': 'fourteenth', '15th': 'fifteenth',
+    '20th': 'twentieth', '21st': 'twenty-first', '22nd': 'twenty-second', '25th': 'twenty-fifth', '30th': 'thirtieth',
+    '50th': 'fiftieth', '100th': 'hundredth'
+  };
+  for (const [ord, word] of Object.entries(ordinals)) {
+    const reg = new RegExp(`\\b${ord}\\b`, 'gi');
+    text = text.replace(reg, word);
+  }
+
+  // 2. Currencies and symbols to spoken words
+  // e.g. $50 -> 50 dollars, €20 -> 20 euros, £10 -> 10 pounds
+  text = text.replace(/\$([0-9]+(?:\.[0-9]{1,2})?)/g, '$1 dollars');
+  text = text.replace(/€([0-9]+(?:\.[0-9]{1,2})?)/g, '$1 euros');
+  text = text.replace(/£([0-9]+(?:\.[0-9]{1,2})?)/g, '$1 pounds');
+  text = text.replace(/\$/g, ' dollars ');
+  text = text.replace(/€/g, ' euros ');
+  text = text.replace(/£/g, ' pounds ');
+  text = text.replace(/%/g, ' percent ');
+  text = text.replace(/&/g, ' and ');
+  text = text.replace(/@/g, ' at ');
+  text = text.replace(/\+/g, ' plus ');
+  text = text.replace(/=/g, ' equals ');
+  text = text.replace(/#/g, ' number ');
+  text = text.replace(/\bvs\b\.?/gi, 'versus');
+  text = text.replace(/\bw\//gi, 'with');
+  text = text.replace(/\bw\/o/gi, 'without');
+
+  // Convert standalone integers (0 to 999) to spoken words
+  text = text.replace(/\b([0-9]{1,3})\b/g, (match) => {
+    const num = parseInt(match, 10);
+    if (!isNaN(num) && num >= 0 && num < 1000) {
+      return smallNumberToWords(num);
+    }
+    return match;
+  });
+
+  // 3. Conversational contractions (replacing rigid, formal words)
+  const contractionMap: Array<[RegExp, string]> = [
+    [/\bI am\b/g, "I'm"],
+    [/\bI have\b/g, "I've"],
+    [/\bI will\b/g, "I'll"],
+    [/\bI would\b/g, "I'd"],
+    [/\bdo not\b/gi, "don't"],
+    [/\bdoes not\b/gi, "doesn't"],
+    [/\bdid not\b/gi, "didn't"],
+    [/\bcannot\b/gi, "can't"],
+    [/\bcan not\b/gi, "can't"],
+    [/\bwill not\b/gi, "won't"],
+    [/\bwould not\b/gi, "wouldn't"],
+    [/\bshould not\b/gi, "shouldn't"],
+    [/\bcould not\b/gi, "couldn't"],
+    [/\bis not\b/gi, "isn't"],
+    [/\bare not\b/gi, "aren't"],
+    [/\bwas not\b/gi, "wasn't"],
+    [/\bwere not\b/gi, "weren't"],
+    [/\bhave not\b/gi, "haven't"],
+    [/\bhas not\b/gi, "hasn't"],
+    [/\bhad not\b/gi, "hadn't"],
+    [/\bit is\b/gi, "it's"],
+    [/\bthat is\b/gi, "that's"],
+    [/\bthere is\b/gi, "there's"],
+    [/\bwhat is\b/gi, "what's"],
+    [/\bwe are\b/gi, "we're"],
+    [/\bthey are\b/gi, "they're"],
+    [/\byou are\b/gi, "you're"],
+    [/\bwe have\b/gi, "we've"],
+    [/\bthey have\b/gi, "they've"],
+    [/\byou have\b/gi, "you've"]
+  ];
+
+  for (const [pattern, replacement] of contractionMap) {
+    text = text.replace(pattern, replacement);
+  }
+
+  // 4. Inject strategic ellipses (...) before long conjunctions to simulate natural breathing gap
+  const conjunctions = ['because', 'although', 'however', 'therefore', 'meanwhile', 'furthermore', 'nevertheless', 'otherwise'];
+  for (const conj of conjunctions) {
+    const reg = new RegExp(`(?<!\\.\\.\\.\\s)(,\\s*)?\\b(${conj})\\b`, 'gi');
+    text = text.replace(reg, '... $2');
+  }
+
+  // Handle 'but' and 'unless' if preceded by at least a few words
+  text = text.replace(/([a-zA-Z]{3,})\s+(but|unless)\b/gi, '$1... $2');
+
+  // Clean double spaces or excessive dots
+  text = text.replace(/\.{4,}/g, '...');
+  text = text.replace(/\s+/g, ' ').trim();
+
+  return text;
+}
+
 // Omni Speech Engine Pipeline Configuration (Deep, hushed, compressed nocturnal profile)
 export const shadowVoiceConfig = {
   voiceId: "omni-shadow-stealth-01", 
@@ -77,6 +216,7 @@ export class OmniVoiceEngine {
   private engineTunings = { ...shadowVoiceConfig.engineParameters };
   private spatialAudioConfig = { ...shadowVoiceConfig.spatialAudio };
   private clonedProfile: ClonedVoiceProfile = { ...defaultClonedVoiceProfile };
+  private vocalRealism: VocalRealismSettings = { ...defaultVocalRealismSettings };
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -98,6 +238,16 @@ export class OmniVoiceEngine {
         }
       } catch (err) {
         console.warn('Could not parse cloned voice profile:', err);
+      }
+
+      // Load saved vocal realism settings
+      try {
+        const savedRealism = localStorage.getItem('omni_vocal_realism');
+        if (savedRealism) {
+          this.vocalRealism = { ...defaultVocalRealismSettings, ...JSON.parse(savedRealism) };
+        }
+      } catch (err) {
+        console.warn('Could not parse vocal realism settings:', err);
       }
 
       // Pre-warm SpeechSynthesis voices and listen for changes
@@ -145,6 +295,17 @@ export class OmniVoiceEngine {
 
   public getVoiceProfile(): string {
     return this.activeProfileId;
+  }
+
+  public getVocalRealism(): VocalRealismSettings {
+    return { ...this.vocalRealism };
+  }
+
+  public setVocalRealism(settings: Partial<VocalRealismSettings>): void {
+    this.vocalRealism = { ...this.vocalRealism, ...settings };
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('omni_vocal_realism', JSON.stringify(this.vocalRealism));
+    }
   }
 
   public subscribe(cb: VoiceCallback): () => void {
@@ -255,7 +416,8 @@ export class OmniVoiceEngine {
     if (!this.isSpeechSynthesisSupported()) return;
     this.stop();
 
-    const utterance = new SpeechSynthesisUtterance(sampleText);
+    const formattedText = prepareTextForSpeech(sampleText);
+    const utterance = new SpeechSynthesisUtterance(formattedText);
     const voices = this.getAvailableVoices();
     const targetURI = voiceURI || this.selectedVoiceURI;
     if (targetURI) {
@@ -268,10 +430,10 @@ export class OmniVoiceEngine {
 
     utterance.pitch = 0.88;
     utterance.rate = 1.0;
-    utterance.volume = 1.0;
+    utterance.volume = this.vocalRealism.speaker_boost ? 1.0 : 0.9;
     this.playSonicPulse(640, 0.05);
 
-    utterance.onstart = () => this.notify('speaking', sampleText);
+    utterance.onstart = () => this.notify('speaking', formattedText);
     utterance.onend = () => {
       this.notify('idle');
       this.currentUtterance = null;
@@ -289,7 +451,8 @@ export class OmniVoiceEngine {
     if (!this.isSpeechSynthesisSupported()) return;
     this.stop();
 
-    const utterance = new SpeechSynthesisUtterance(sampleText);
+    const formattedText = prepareTextForSpeech(sampleText);
+    const utterance = new SpeechSynthesisUtterance(formattedText);
     const voice = this.getPreferredVoice();
     if (voice) {
       utterance.voice = voice;
@@ -300,10 +463,10 @@ export class OmniVoiceEngine {
 
     utterance.pitch = pitch;
     utterance.rate = rate;
-    utterance.volume = 1.0;
+    utterance.volume = this.vocalRealism.speaker_boost ? 1.0 : 0.9;
     this.playSonicPulse(580, 0.06);
 
-    utterance.onstart = () => this.notify('speaking', sampleText);
+    utterance.onstart = () => this.notify('speaking', formattedText);
     utterance.onend = () => {
       this.notify('idle');
       this.currentUtterance = null;
@@ -361,12 +524,15 @@ export class OmniVoiceEngine {
     // Cancel any ongoing speech
     this.stop();
 
-    const cleanText = text
+    const rawText = text
       .replace(/[#*`_~]/g, '')
       .replace(/⚡|🔥|✨|💀|🖤|💡|🎯|🚀/g, '')
       .trim();
 
-    if (!cleanText) return;
+    if (!rawText) return;
+
+    // Apply human conversational formatting middleware
+    const cleanText = prepareTextForSpeech(rawText);
 
     this.playSonicPulse(520, 0.06);
 
@@ -385,9 +551,15 @@ export class OmniVoiceEngine {
       calibratedRate = Math.max(0.5, Math.min(2.0, this.clonedProfile.extractedMetrics.rate));
     }
 
+    // Apply realism modulation (subtle drift if stability < 0.50)
+    if (this.vocalRealism.stability < 0.5) {
+      const inflectionOffset = (0.5 - this.vocalRealism.stability) * 0.06 * (Math.random() - 0.5);
+      calibratedPitch = Math.max(0.1, calibratedPitch + inflectionOffset);
+    }
+
     utterance.pitch = options?.pitch ?? calibratedPitch;
     utterance.rate = options?.rate ?? calibratedRate;
-    utterance.volume = this.engineTunings.volume ?? 1.0;
+    utterance.volume = this.vocalRealism.speaker_boost ? 1.0 : (this.engineTunings.volume ?? 0.95);
 
     utterance.onstart = () => {
       this.notify('speaking', cleanText);

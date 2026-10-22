@@ -52,9 +52,10 @@ import { omniVoice } from './lib/omniVoice';
 import { OmniVoidBackground } from './components/OmniVoidBackground';
 import { LiveCallView, CALLER_PRESETS, LiveCallCaller } from './components/LiveCallView';
 import { OmniAutoPilotSetupModal } from './components/OmniAutoPilotSetupModal';
+import { MyAIIdentityView } from './components/MyAIIdentityView';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'keyboard' | 'chat' | 'vision' | 'workspace' | 'extension' | 'studios' | 'sync' | 'setup' | 'admin'>('keyboard');
+  const [activeTab, setActiveTab] = useState<'keyboard' | 'chat' | 'vision' | 'workspace' | 'extension' | 'studios' | 'sync' | 'setup' | 'admin' | 'identity'>('keyboard');
   const [isDesktopOverlayActive, setIsDesktopOverlayActive] = useState(false);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState<boolean>(omniVoice.getVoiceEnabled());
   const [isLiveCallOpen, setIsLiveCallOpen] = useState(false);

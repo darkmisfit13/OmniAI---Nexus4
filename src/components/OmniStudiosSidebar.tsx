@@ -32,6 +32,7 @@ interface OmniStudiosSidebarProps {
   onSelectStudio: (id: StudioId) => void;
   onOpenOmniAIChat?: () => void;
   onOpenSettings?: () => void;
+  onOpenIdentity?: () => void;
   onOpenVault?: () => void;
 }
 
@@ -42,6 +43,7 @@ export const OmniStudiosSidebar: React.FC<OmniStudiosSidebarProps> = ({
   onSelectStudio,
   onOpenOmniAIChat,
   onOpenSettings,
+  onOpenIdentity,
   onOpenVault,
 }) => {
   if (!isOpen) return null;
@@ -169,6 +171,30 @@ export const OmniStudiosSidebar: React.FC<OmniStudiosSidebarProps> = ({
 
         {/* BOTTOM SECTION: SETTINGS BLOCK & GLOBAL VAULT */}
         <div className="p-3 border-t border-slate-800 bg-[#07090f] space-y-2">
+          {/* My AI Identity Button */}
+          {onOpenIdentity && (
+            <button
+              onClick={() => {
+                onClose();
+                onOpenIdentity();
+              }}
+              className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-red-950/30 via-zinc-900 to-cyan-950/30 border border-zinc-700 hover:border-cyan-400 text-zinc-200 hover:text-white text-xs font-semibold flex items-center justify-between transition-all group active:scale-[0.98] shadow-sm"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="p-1.5 rounded-lg bg-red-950/70 border border-red-500/40 text-red-400 group-hover:text-red-300">
+                  <Bot className="w-4 h-4" />
+                </div>
+                <div className="text-left">
+                  <span className="block font-bold text-xs text-white">My AI Identity</span>
+                  <span className="text-[9.5px] text-zinc-400 block font-normal">
+                    Voice Cloning Matrix & Text Persona
+                  </span>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-zinc-500 group-hover:text-cyan-400" />
+            </button>
+          )}
+
           {/* Settings block/button moved from upper right corner */}
           <button
             onClick={() => {

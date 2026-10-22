@@ -17,9 +17,10 @@ import { PWAInstallButton } from './PWAInstallButton';
 
 interface MobileSetupGuideProps {
   onTestKeyboard?: () => void;
+  onOpenIdentity?: () => void;
 }
 
-export const MobileSetupGuide: React.FC<MobileSetupGuideProps> = ({ onTestKeyboard }) => {
+export const MobileSetupGuide: React.FC<MobileSetupGuideProps> = ({ onTestKeyboard, onOpenIdentity }) => {
   return (
     <div className="flex flex-col h-full overflow-y-auto p-4 space-y-4 text-slate-100 bg-[#000000] font-mono">
       {/* 1. APP INSTALLATION HERO */}
@@ -110,6 +111,30 @@ export const MobileSetupGuide: React.FC<MobileSetupGuideProps> = ({ onTestKeyboa
           </span>
         </div>
       </div>
+
+      {/* 5. PERSONAL AI IDENTITY SHORTCUT */}
+      {onOpenIdentity && (
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-red-950/40 via-zinc-900 to-cyan-950/40 border border-zinc-700/80 space-y-2.5">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-white flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+              My AI Identity (/settings/identity)
+            </span>
+            <span className="text-[9.5px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
+              Settings
+            </span>
+          </div>
+          <p className="text-[11px] text-zinc-400 leading-relaxed">
+            Train your personal Voice Cloning Matrix for automated phone calls and Text Persona Engine for autonomous messaging.
+          </p>
+          <button
+            onClick={onOpenIdentity}
+            className="w-full py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 hover:border-cyan-400 text-cyan-300 font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-98 shadow-md"
+          >
+            Configure Voice & Text Persona
+          </button>
+        </div>
+      )}
 
       <button
         onClick={onTestKeyboard}
